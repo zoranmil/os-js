@@ -1,3 +1,9 @@
+# OpenShop Engine — Testing Environment
+
+### 🚀 [Launch Live Demo Here](https://github.io)
+
+This repository serves as a live sandbox and testing environment for developing, testing, and demonstrating custom JavaScript modules and notification systems integrated within the OpenShop (OS) core library.
+
 # Testing Environment for Custom JS Framework, Modules, and Notifications
 
 This repository serves as a sandbox and testing environment for developing, testing, and demonstrating custom JavaScript modules and notification systems integrated within the OpenShop (OS) core library.
