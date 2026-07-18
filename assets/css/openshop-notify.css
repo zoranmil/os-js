@@ -1,0 +1,174 @@
+/* ==========================================================================
+   OPENSHOP NOTIFY ENGINE - COMPLETE CSS (v2.7.2)
+   ========================================================================== */
+
+:root {
+    --os-orange: #fb923c;
+    --os-orange-dark: #ea580c;
+    --os-success: #10b981;
+    --os-danger: #ef4444;
+    --os-warning: #ffb020;
+    --os-dark: #1f2937;
+    --os-radius: 12px;
+    --os-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* --- 1. TOAST KONTEJNER (Pozicioniranje) --- */
+.toast-container {
+    z-index: 2100 !important;
+}
+
+/* Glavni Toast stil */
+#os-toast {
+    min-width: 320px;
+    border-radius: var(--os-radius) !important;
+    border: none !important;
+    box-shadow: var(--os-shadow) !important;
+    backdrop-filter: blur(10px); /* Glassmorphism efekt */
+    -webkit-backdrop-filter: blur(10px);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden;
+}
+
+/* --- 2. VARIJANTE BOJA ZA TOAST --- */
+
+/* Success - Zeleno */
+#os-toast.bg-success {
+    background-color: rgba(16, 185, 129, 0.9) !important;
+    border-left: 5px solid #059669 !important;
+}
+
+/* Error - Crveno */
+#os-toast.bg-danger {
+    background-color: rgba(239, 68, 68, 0.9) !important;
+    border-left: 5px solid #dc2626 !important;
+}
+
+/* Loading - OpenShop Orange */
+#os-toast.bg-dark {
+    background-color: rgba(251, 146, 60, 0.95) !important;
+    border-left: 5px solid var(--os-orange-dark) !important;
+}
+
+/* Confirm (Toast verzija) - Žuto */
+#os-toast.bg-warning {
+    background-color: var(--os-warning) !important;
+    border-left: 5px solid #d97706 !important;
+    color: #000 !important;
+}
+
+/* --- 3. UNUTRAŠNJOST TOAST-A --- */
+
+.toast-body {
+    padding: 1rem !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Akciona zona za Confirm dugmiće unutar Toasta */
+#os-toast-actions {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 10px 15px !important;
+}
+
+/* Stil za dugmad unutar Toasta */
+#os-toast-confirm-btn {
+    background-color: #000 !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 4px 12px;
+    transition: transform 0.2s;
+}
+
+#os-toast-confirm-btn:hover {
+    transform: scale(1.05);
+}
+
+/* --- 4. MODAL SISTEM (Alert & Confirm2) --- */
+
+/* Zamućenje pozadine kada je modal otvoren */
+.modal-backdrop.show {
+    opacity: 0.4;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* Stil za Modal prozor */
+.modal-content {
+    border: none !important;
+    border-radius: 20px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    overflow: hidden;
+}
+
+/* Zaglavlje modala */
+.modal-header {
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding: 1.5rem 1.5rem 1rem !important;
+}
+
+.modal-title {
+    font-weight: 700 !important;
+    color: var(--os-dark);
+}
+
+/* Telo modala */
+.modal-body {
+    padding: 1.5rem !important;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+/* Podnožje modala */
+.modal-footer {
+    background-color: #f8fafc;
+    border-top: none !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+/* Dugmići u modalu */
+.modal-footer .btn {
+    border-radius: 10px !important;
+    padding: 10px 20px !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* Primarno dugme koristi OpenShop Orange */
+.modal-footer .btn-primary {
+    background-color: var(--os-orange) !important;
+    border-color: var(--os-orange) !important;
+    box-shadow: 0 4px 6px rgba(251, 146, 60, 0.2);
+}
+
+.modal-footer .btn-primary:hover {
+    background-color: var(--os-orange-dark) !important;
+    transform: translateY(-1px);
+}
+
+/* --- 5. ANIMACIJE --- */
+
+/* Spinner za loading stanje */
+@keyframes os-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.fa-spin {
+    animation: os-spin 1s linear infinite !important;
+}
+
+/* Dugme za zatvaranje (X) */
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%); /* Osigurava da je X beo */
+}
+
+/* Ako je toast bg-warning, X mora biti crno */
+#os-toast.bg-warning .btn-close {
+    filter: none !important;
+}
