@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenShop Framework - Test Stranica</title>
+
+
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/all.min.css" rel="stylesheet">
+
+    <!-- TVOJI MODULI (CSS) -->
+      <link rel="stylesheet" href="assets/css/openshop-notify.css?v=23">
+    <link rel="stylesheet" href="assets/css/select.css?v=232">
+    <link rel="stylesheet" href="assets/css/image-preview.css?v=2321">
+  <link rel="stylesheet" href="assets/css/openshop-tagsinput.css?v=2321">
+    <link rel="stylesheet" href="assets/css/openshop-datepicker.css?v=2321">
+    <style>
+        /**
+         * OPENSHOP UI - BRANDING & CORE STYLES
+         */
+        :root {
+            --os-primary: #fb923c; /* OpenShop Orange */
+            --os-primary-hover: #ea580c;
+            --os-primary-light: rgba(251, 146, 60, 0.1);
+            --os-primary-shadow: rgba(251, 146, 60, 0.25);
+            --os-dark: #1e293b;
+            --os-radius: 12px;
+            --os-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; color: var(--os-dark); padding-top: 40px; }
+
+        /* Kartice i Layout */
+        .card { border: none; border-radius: var(--os-radius); box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 25px; }
+        .card-header { background: #fff; border-bottom: 1px solid #f1f5f9; font-weight: 700; padding: 1.25rem; }
+        .btn-primary { background-color: var(--os-primary); border-color: var(--os-primary); font-weight: 600; }
+        .btn-primary:hover { background-color: var(--os-primary-hover); border-color: var(--os-primary-hover); }
+
+
+        .modal-content { border-radius: 20px; border: none; box-shadow: 0 25px 60px rgba(0,0,0,0.2); }
+
+        /* Kontejner za ikonicu unutar Bootstrap grupe */
+        .input-group-text {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 48px; /* Obezbeđuje stabilnu širinu za lg veličinu unosa */
+        }
+
+        /* Glavno telo ikonice pipete */
+        .pipeta-ikona {
+          position: relative;
+          display: inline-block;
+          width: 5px;
+          height: 12px;
+          background: #495057; /* Bootstrap neutralna tamno siva boja */
+          border-radius: 1px;
+          /* Rotira i fino podešava optički centar */
+          transform: rotate(45deg) translate(-1px, -1px);
+        }
+
+        /* Gornji gumeni deo pipete */
+        .pipeta-ikona::before {
+          content: '';
+          position: absolute;
+          top: -5px;
+          left: -2px;
+          width: 9px;
+          height: 5px;
+          background: #dc3545; /* Bootstrap crvena boja (danger) */
+          border-radius: 3px 3px 1px 1px;
+        }
+
+        /* Donji oštri vrh pipete */
+        .pipeta-ikona::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0.5px;
+          width: 0;
+          height: 0;
+          border-left: 2px solid transparent;
+          border-right: 2px solid transparent;
+          border-top: 4px solid #495057;
+        }
+
+
+    </style>
+</head>
+<body >
+
+    <div class="container py-5">
+
+        <!-- Zaglavlje -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="fw-bold text-primary"><i class="fa-solid fa-shop me-2"></i>OpenShop Engine</h1>
+                <p class="text-muted">Testno okruženje za custom JS framework, module i obaveštenja</p>
+                <hr class="w-25 mx-auto">
+            </div>
+        </div>
+
+        <div class="row">
+
+            <!-- LEVA KOLONA: Testiranje Modula -->
+            <div class="col-lg-8">
+              <div class="card">
+                  <div class="card-header"><i class="fa-solid fa-cube me-2 text-primary"></i> Testiranje Modula</div>
+                  <div class="card-body">
+                      <form id="os-main-form" action="index.php" method="post"  enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">4. KLJUČNE REČI / TAGOVI (TagsInput):</label>
+                            <!-- Čisto tekstualno polje koje naš plugin pretvara u narandžaste bedževe -->
+                            <input type="text" class="form-control" name="tags" id="testniTagovi" placeholder="Ukucaj reč i pritisni Enter..." value="Novo, Rasprodaja">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">4.a  Klasičan unos rođendana ili opšteg datuma (Dozvoljena prošlost):</label>
+                            <!-- Čisto tekstualno polje koje naš plugin pretvara u narandžaste bedževe -->
+                            <input type="text" class="form-control datum-akcije">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">4.b  Color Picker:</label>
+                            <!-- Čisto tekstualno polje koje naš plugin pretvara u narandžaste bedževe -->
+                            <div id="hex_code" class="input-group input-group-lg">
+                                <span class="input-group-text"><i class="pipeta-ikona"></i></span>
+                                <input type="text" class="form-control demo-inputs fw-bold fs-6 text-uppercase" name="hex_code" id="color" data-color="#ffffff" value="#ffffff" placeholder="<?php echo _('#HEX code');?>" readonly style="cursor: pointer;">
+                            </div>
+                        </div>
+                          <div class="mb-4">
+                              <label class="form-label fw-bold small text-uppercase">1. Naziv proizvoda</label>
+                              <input type="text" name="product_title" class="form-control form-control-lg" placeholder="npr. Smart Watch Pro" required>
+                          </div>
+
+                          <div class="row mb-4">
+                              <div class="col-md-6">
+                                  <label class="form-label fw-bold small text-uppercase">2. Kategorija (Single)</label>
+                                  <select id="sel-cat" name="category" class="form-select">
+                                      <option value="1">Elektronika</option>
+                                      <option value="2" selected>Tehnika</option>
+                                      <option value="3">Oprema</option>
+                                  </select>
+                              </div>
+                              <div class="col-md-6">
+                                  <label class="form-label fw-bold small text-uppercase">3. Tagovi (Multiple)</label>
+                                  <select id="sel-tags" name="tags[]"   class="form-select" multiple>
+                                      <option value="new" selected>Novo</option>
+                                      <option value="sale">Akcija</option>
+                                      <option value="top">Top Prodaja</option>
+                                      <option value="limited">Limited</option>
+                                  </select>
+                              </div>
+                          </div>
+
+                          <div class="mb-4">
+                              <label class="form-label fw-bold small text-uppercase">4. Slika Proizvoda</label>
+                              <input type="file" id="os-img-up" name="moj_fajl">
+                          </div>
+
+                          <button type="submit" class="btn btn-primary btn-lg w-100 shadow">
+                              SAČUVAJ PODATKE
+                          </button>
+                      </form>
+                  </div>
+              </div>
+
+                <!-- 1. Test za Selects Modul -->
+                <div class="card">
+
+                    <div class="card-header py-3 text-secondary">
+                        <i class="fa-solid fa-list-ul me-2"></i> 1. Custom Selects Modul
+                    </div>
+                    <div class="card">
+
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Dokumentacija i Uputstvo za Upotrebu</h5>
+                            <p class="card-text text-muted small">
+                                Ovaj modul pretvara standardne HTML <code>&lt;select&gt;</code> elemente u moderne dropdown menije sa podrškom za lokalnu pretragu i asinhroni AJAX search, uz potpuno očuvanje selektovanih stavki (Select2 logika).
+                            </p>
+
+                            <hr>
+
+                            <!-- Sekcija: Osnovno pokretanje -->
+                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-code me-2 small text-primary"></i> 1. Inicijalizacija</h6>
+                            <p class="small text-secondary mb-2">Pokretanje se vrši direktno preko tvoje <code>OpenShop</code> (<code>OS</code>) biblioteke:</p>
+                            <pre class="bg-light p-2 rounded small border text-dark mb-4"><code>// Minimalni lokalni režim
+                    OS('#moj-select').Selects();</code></pre>
+
+                            <!-- Sekcija: Opcije konfiguracije -->
+                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-sliders me-2 small text-primary"></i> 2. Sve Opcije Konfiguracije</h6>
+                            <div class="table-responsive mb-4">
+                                <table class="table table-sm table-bordered small align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Opcija</th>
+                                            <th>Tip</th>
+                                            <th>Default</th>
+                                            <th>Opis</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>issearch</code></td>
+                                            <td><span class="badge bg-secondary">Boolean</span></td>
+                                            <td><code>false</code></td>
+                                            <td>Prikazuje polje za kucanje i filtriranje opcija.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>placeholder</code></td>
+                                            <td><span class="badge bg-secondary">String</span></td>
+                                            <td><code>'Select'</code></td>
+                                            <td>Podrazumevani tekst na glavnom dugmetu.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>ajaxUrl</code></td>
+                                            <td><span class="badge bg-secondary">String</span></td>
+                                            <td><code>''</code></td>
+                                            <td>URL adresa servera. Aktivira <strong>AJAX režim</strong> pretrage.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>data</code></td>
+                                            <td><span class="badge bg-secondary">Object</span></td>
+                                            <td><code>{ q: 'q' }</code></td>
+                                            <td>Format GET parametra koji šalješ serveru (npr. <code>{ pojam: '' }</code>).</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>onSelect</code></td>
+                                            <td><span class="badge bg-secondary">Function</span></td>
+                                            <td><code>null</code></td>
+                                            <td>Callback funkcija koja se okida nakon klika na opciju.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Sekcija: Praktični primeri -->
+                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-star me-2 small text-primary"></i> 3. Režimi rada (Primeri)</h6>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold text-secondary mb-1">A) Lokalni Multiselect (Modul sam detektuje <code>multiple</code> atribut u HTML-u):</label>
+                                <pre class="bg-light p-2 rounded small border text-dark mb-0"><code>OS('#tagovi').Selects({
+                        issearch: true,
+                        odabrano: 'Izabrano tagova'
+                    });</code></pre>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label small fw-semibold text-secondary mb-1">B) Napredna AJAX pretraga (Kao Select2 sa Debounce podrškom):</label>
+                                <pre class="bg-light p-2 rounded small border text-dark mb-0"><code>OS('#korisnici').Selects({
+                        issearch: true,
+                        ajaxUrl: '/api/search.php',
+                        data: { pojam: '' }, // Server prima: ?pojam=uneseni_tekst
+                        odabrano: 'Izabrano korisnika',
+                        onSelect: function(value, text, isChecked, plugin) {
+                            console.log("Kliknut ID:", value, "Status:", isChecked);
+                        }
+                    });</code></pre>
+                            </div>
+
+                            <!-- Sekcija: Backend Format -->
+                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-server me-2 small text-primary"></i> 4. Očekivani JSON format sa servera</h6>
+                            <p class="small text-secondary mb-2">Tvoj backend skript mora da vrati čisti JSON niz objekata u jednom od sledeća dva formata:</p>
+                            <pre class="bg-light p-2 rounded small border text-dark mb-0"><code>[
+                      { "id": "1", "text": "Marko Marković" },
+                      { "id": "2", "text": "Jovan Jovanović" }
+                    ]</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="card-body py-4">
+                        <label class="form-label fw-medium">Izaberi status pošiljke (Custom Dropdown):</label>
+                        <!-- Ovde se kači tvoj select.js plugin -->
+                        <select id="test-select" name="test-select" class="form-select">
+                            <option value="CREATED" selected="selected">CREATED - NAJAVLJENO (Čeka se roba)</option>
+                            <option value="SHIPPED">SHIPPED - POSLATO / U TRANZITU</option>
+                            <option value="ARRIVED">ARRIVED - STIGLO U MAGACIN</option>
+                            <option value="COUNTED">COUNTED - IZBROJANO I VERIFIKOVANO</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- ==========================================================================
+                     IMAGE PREVIEW MODUL (V2.7.2) - KOMPLETNA DOKUMENTACIJA
+                     ========================================================================== -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header py-3 text-secondary bg-white border-bottom-0">
+                        <i class="fa-solid fa-image me-2 text-success"></i> 2. Custom ImagePreview Modul (AJAX Upload)
+                    </div>
+                    <div class="card-body pt-0">
+                        <h5 class="card-title mb-3 text-dark fw-bold">Dokumentacija i Uputstvo za Upotrebu</h5>
+                        <p class="card-text text-muted small">
+                            Ovaj modul pretvara standardni <code>&lt;input type="file"&gt;</code> u naprednu zonu za prevlačenje slika (Drag & Drop) sa munjevitim lokalnim pregledom. Ako je u konfiguraciji podešen URL, slika se istog trenutka automatski šalje na server u pozadini preko asinhronog <code>FormData</code> objekta, bez potrebe za osvežavanjem stranice ili ručnim slanjem forme.
+                        </p>
+
+                        <hr>
+
+                        <!-- Sekcija 1: Inicijalizacija -->
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-code me-2 small text-success"></i> 1. Inicijalizacija i Pokretanje</h6>
+                        <p class="small text-secondary mb-2">Pokretanje vršiš direktno preko tvog <code>OS.fn</code> prototipa uz podršku za asinhroni upload:</p>
+                        <pre class="bg-light p-3 rounded small border text-dark mb-4"><code>// Aktivacija sa automatskim AJAX slanjem na server
+                OS('#slika-input').ImagePreview({
+                    uploadUrl: '/api/upload-slike.php',
+                    uploadData: { folder: 'proizvodi', _token: 'CSRF_123' }, // Dodatni parametri
+                    onUploadSuccess: function(response, plugin) {
+                        console.log("Server je primio sliku!", response);
+                    },
+                    onUploadError: function(xhr, status, plugin) {
+                        OS.notify.error("Upload nije uspeo!");
+                    }
+                });</code></pre>
+
+                        <!-- Sekcija 2: Tabela opcija -->
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-sliders me-2 small text-success"></i> 2. Opcije Konfiguracije</h6>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-sm table-bordered small align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Opcija</th>
+                                        <th>Tip</th>
+                                        <th>Default</th>
+                                        <th>Opis</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>uploadUrl</code></td>
+                                        <td>String</td>
+                                        <td><code>''</code></td>
+                                        <td>URL tvog API-ja. Ako je prisutan, aktivira se automatski AJAX upload odmah nakon odabira fajla.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>uploadData</code></td>
+                                        <td>Object</td>
+                                        <td><code>{}</code></td>
+                                        <td>Dodatni ključ-vrednost parovi koji se šalju uz sliku (npr. ID korisnika, security tokeni).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>onUploadSuccess</code></td>
+                                        <td>Function</td>
+                                        <td><code>null</code></td>
+                                        <td>Callback funkcija koja se izvršava nakon uspešnog odgovora servera (HTTP 200).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>onUploadError</code></td>
+                                        <td>Function</td>
+                                        <td><code>null</code></td>
+                                        <td>Callback funkcija koja se izvršava ako server vrati grešku ili dođe do prekida veze.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>onChange</code></td>
+                                        <td>Function</td>
+                                        <td><code>null</code></td>
+                                        <td>Lokalni callback. Okida se čim browser završi renderovanje slike u preview zoni.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Sekcija 3: Metode -->
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-gears me-2 small text-success"></i> 3. API Metode Instance</h6>
+                        <p class="small text-secondary mb-2">Preko kreirane instance možeš programski kontrolisati modul:</p>
+                        <ul class="small text-dark ps-3 mb-4">
+                            <li class="mb-1"><code>instance.clear()</code> – Potpuno resetuje polje, uklanja sliku i oslobađa memoriju.</li>
+                            <li class="mb-1"><code>instance.getBase64()</code> – Vraća Base64 kod slike (korisno za offline čuvanje).</li>
+                            <li class="mb-1"><code>instance.getFile()</code> – Vraća sirovi <code>File</code> objekat spreman za manuelnu manipulaciju.</li>
+                        </ul>
+
+                        <!-- Sekcija 4: Detaljan opis unutrašnjeg mehanizma -->
+                        <div class="mt-4 border-top pt-4">
+                            <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-microchip me-2 small text-success"></i> 4. Detaljan opis unutrašnjeg mehanizma rada</h6>
+
+                            <div class="row g-3">
+                                <!-- Kako radi Preview -->
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-3 bg-light h-100">
+                                        <strong class="d-block mb-1 small text-uppercase text-success">Hibridni Preview sistem</strong>
+                                        <p class="small text-muted mb-0">
+                                            Modul koristi <strong>Blob Object URL</strong> za instantni prikaz slike. Za razliku od Base64 formata, Blob ne opterećuje procesor jer kreira direktnu mapu do fajla u RAM memoriji, što omogućava da se slika od 10MB prikaže u milisekundi.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Memorijska optimizacija -->
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-3 bg-light h-100">
+                                        <strong class="d-block mb-1 small text-uppercase text-success">Automatsko oslobađanje RAM-a</strong>
+                                        <p class="small text-muted mb-0">
+                                            Svaki put kada korisnik promeni sliku, modul poziva <code>URL.revokeObjectURL()</code>. Ovo sprečava "curenje" memorije (Memory Leak) koje bi nastalo zadržavanjem starih preview-ova u RAM-u.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- AJAX Logika -->
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-3 bg-light h-100">
+                                        <strong class="d-block mb-1 small text-uppercase text-success">Asinhroni FormData proces</strong>
+                                        <p class="small text-muted mb-0">
+                                            Prilikom slanja na server, modul pakuje sliku u <code>FormData</code> objekat. Ovo simulira klasično slanje forme, što znači da vaš backend prima fajl kroz standardni <code>$_FILES</code> niz podataka.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Kontrola stanja -->
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-3 bg-light h-100">
+                                        <strong class="d-block mb-1 small text-uppercase text-success">isUploading barijera</strong>
+                                        <p class="small text-muted mb-0">
+                                            Modul poseduje internu zaštitu koja sprečava višestruko slanje istog fajla (Race Condition). Dok traje upload, aktivira se vizuelni overlay koji blokira interakciju dok server ne vrati odgovor.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Funkcionalni tok -->
+                            <div class="mt-4">
+                                <h6 class="fw-bold text-dark mb-2 small text-uppercase text-success">Funkcionalni tok procesa:</h6>
+                                <ol class="small text-secondary ps-3">
+                                    <li class="mb-2"><strong>Validacija:</strong> Provera MIME tipa fajla. Ako fajl nije slika, proces se obustavlja.</li>
+                                    <li class="mb-2"><strong>Rendering:</strong> Generisanje Blob URL-a i prikaz u <code>.image-preview-render</code> zoni.</li>
+                                    <li class="mb-2"><strong>Upload:</strong> Ako postoji <code>uploadUrl</code>, inicijalizuje se <code>XMLHttpRequest</code> sa <code>FormData</code> paketom.</li>
+                                    <li class="mb-2"><strong>Feedback:</strong> Pozivaju se success/error callback funkcije i osvežava se UI stanje.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body py-4 text-center">
+                        <div class="col-md-6 mx-auto">
+                            <input class="form-control" name="avatar-input" type="file" id="avatar-input" accept="image/*">
+                            <div class="form-text mt-2">Testiraj Drag & Drop ili klikni za odabir</div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ==========================================================================
+                     CORE NOTIFY MODUL (V2.7.0) - DOKUMENTACIJA
+                     ========================================================================== -->
+                <div class="card shadow-sm border-0 mb-5">
+                    <div class="card-header py-3 text-secondary bg-white border-bottom-0">
+                        <i class="fa-solid fa-bell me-2 text-info"></i> 4. Core Notify Modul (Dynamic API v2.7.0)
+                    </div>
+                    <div class="card-body pt-0">
+                        <h5 class="card-title mb-3 text-dark fw-bold">Dokumentacija i Uputstvo za Upotrebu</h5>
+                        <p class="card-text text-muted small">
+                            Globalni sistem obaveštenja integrisan direktno u <code>OS.notify</code> jezgro. Modul se odlikuje <strong>Zero-HTML</strong> arhitekturom – samostalno generiše i ubacuje potreban Bootstrap šablon u DOM tek pri prvom pozivu, čime eliminiše potrebu za statičkim kodom na stranici.
+                        </p>
+
+                        <hr>
+
+                        <!-- Sekcija: Inicijalizacija -->
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-terminal me-2 small text-info"></i> 1. Metode i Pokretanje</h6>
+                        <p class="small text-secondary mb-2">Pozivanje se vrši direktno kroz namespace, podržavajući Toasts (brze poruke) i Modale (dijaloge):</p>
+                        <pre class="bg-light p-3 rounded small border text-dark mb-4"><code>// Primena Toast-a (automatsko zatvaranje)
+                OS.notify.success('Podaci su sačuvani!', 3000);
+
+                // Primena Modala (zahteva interakciju korisnika)
+                OS.notify.confirm2('Da li želite da obrišete stavku?', function() {
+                    console.log('Korisnik je potvrdio brisanje');
+                }, 'Potvrda akcije');</code></pre>
+
+                        <!-- Sekcija: Tabela Metoda -->
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-list me-2 small text-info"></i> 2. Pregled Dostupnih Metoda</h6>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-sm table-bordered small align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Metoda</th>
+                                        <th>Tip</th>
+                                        <th>Opis</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>success(msg, dur)</code></td>
+                                        <td>Toast</td>
+                                        <td>Zeleno obaveštenje sa auto-hide tajmerom.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>error(msg, dur)</code></td>
+                                        <td>Toast</td>
+                                        <td>Crveno obaveštenje za greške u sistemu.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>loading(msg)</code></td>
+                                        <td>Toast</td>
+                                        <td>Tamni toast sa spinnerom. Stoji dok se ne pozove <code>hide()</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>alert(msg, title)</code></td>
+                                        <td>Modal</td>
+                                        <td>Blokirajući dijalog sa tasterom "U redu".</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>confirm2(msg, cb, title)</code></td>
+                                        <td>Modal</td>
+                                        <td>Dijalog sa potvrdom i callback funkcijom za izvršavanje akcije.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Sekcija: Detaljan opis unutrašnjeg mehanizma -->
+                        <div class="mt-4 border-top pt-4">
+                            <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-microchip me-2 small text-info"></i> 3. Detaljan opis mehanizma rada</h6>
+                            <div class="row g-3">
+                                <!-- Zero-HTML Injection -->
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-3 bg-light h-100">
+                                        <strong class="d-block mb-1 small text-uppercase text-info">Zero-HTML Injection</strong>
+                                        <p class="small text-muted mb-0">
+                                            Funkcija <code>_ensureHtmlExists()</code> proverava prisustvo kontejnera u realnom vremenu. Ako kontejner ne postoji, modul vrši dinamičko ubrizgavanje kompletnog Bootstrap šablona na kraj <code>&lt;body&gt;</code> elementa.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Lifecycle Control -->
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-3 bg-light h-100">
+                                        <strong class="d-block mb-1 small text-uppercase text-info">Lifecycle Control</strong>
+                                        <p class="small text-muted mb-0">
+                                            Svaki novi poziv automatski poziva <code>_reset()</code> metodu koja čisti prethodne tajmere (clearTimeout) i uklanja <code>onclick</code> evente, sprečavajući akumulaciju akcija i "pucanje" animacija.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- CSS GPU Acceleration -->
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-3 bg-light h-100">
+                                        <strong class="d-block mb-1 small text-uppercase text-info">GPU-Accelerated Animations</strong>
+                                        <p class="small text-muted mb-0">
+                                            Prikaz i skrivanje koriste nativne CSS <code>opacity</code> tranzicije. Metoda <code>hide()</code> sačeka tačno 300ms (dužina tranzicije) pre nego što elementu postavi <code>display: none</code>, osiguravajući glatko vizuelno iskustvo.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Smart Callback Sync -->
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-3 bg-light h-100">
+                                        <strong class="d-block mb-1 small text-uppercase text-info">Smart Callback Sync</strong>
+                                        <p class="small text-muted mb-0">
+                                            Kod <code>confirm2</code> metode, callback funkcija se izoluje. Tek nakon eksplicitnog klika na "Nastavi", skripta gasi modal i pokreće prosleđenu logiku, čime se sprečava preuranjeno izvršavanje koda.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Funkcionalni tok -->
+                        <div class="mt-4">
+                            <h6 class="fw-bold text-dark mb-2 small text-uppercase text-info">Tehnički tok procesa:</h6>
+                            <ol class="small text-secondary ps-3">
+                                <li class="mb-2"><strong>DOM Init:</strong> Provera i kreiranje <code>#os-toast</code> i <code>#os-modal</code> kontejnera.</li>
+                                <li class="mb-2"><strong>Cleanup:</strong> Resetovanje svih Bootstrap klasa (bg-success, bg-danger, itd.) i skidanje starih slušalaca događaja.</li>
+                                <li class="mb-2"><strong>State Management:</strong> Postavljanje novog sadržaja, naslova i dodeljivanje callback akcija na tastere.</li>
+                                <li class="mb-2"><strong>Execution:</strong> Pokretanje CSS tranzicije i aktivacija auto-hide tajmera (samo za Toasts).</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DESNA KOLONA: Kontrolna Tabla za Obaveštenja -->
+            <div class="col-lg-4">
+              <div class="card bg-dark text-white">
+                  <div class="card-header bg-transparent text-white border-secondary">
+                      <i class="fa-solid fa-bolt me-2 text-warning"></i> Notify Engine API
+                  </div>
+                  <div class="card-body">
+                      <p class="small text-secondary mb-4">Ovaj modul upravlja svim sistemskim porukama bez pisanja dodatnog HTML-a.</p>
+
+                      <div class="d-grid gap-2 mb-4">
+                          <button class="btn btn-sm btn-outline-success" onclick="OS.notify.success('Podaci su uspešno sinhronizovani!')">Success Toast</button>
+                          <button class="btn btn-sm btn-outline-danger" onclick="OS.notify.error('Došlo je do prekida veze sa bazom!')">Error Toast</button>
+                          <button class="btn btn-sm btn-outline-info" onclick="OS.notify.loading('Slanje fajlova u toku...')">Loading Toast</button>
+                      </div>
+
+                      <h6 class="fw-bold small text-uppercase mb-3">Modali (Sistemski Dijalozi)</h6>
+                      <div class="d-grid gap-2">
+                          <button class="btn btn-warning text-dark fw-bold" onclick="OS.notify.alert('Vaša sesija ističe za 60 sekundi!', 'Sigurnosno upozorenje')">Otvori Alert Modal</button>
+                          <button class="btn btn-outline-light" onclick="OS.notify.confirm('Da li želite da trajno obrišete ovaj proizvod?', () => OS.notify.error('Proizvod obrisan!'), 'Potvrda brisanja')">Otvori Confirm Modal 1</button>
+  <button class="btn btn-outline-light" onclick="OS.notify.confirm2('Da li želite da trajno obrišete ovaj proizvod?', () => OS.notify.error('Proizvod obrisan!'), 'Potvrda brisanja')">Otvori Confirm Modal 2</button>
+                      </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- 2. Tvoj osnovni framework (Zamena za jQuery) -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/os.js?v=45"></script>
+  <!-- Tvoji integrisani OpenShop plugini -->
+  <script src="assets/js/select.js?v=kl"></script>
+  <script src="assets/js/image-preview.js?v=25"></script>
+  <script src="assets/js/openshop-notify.js?v=332"></script>
+  <script src="assets/js/openshop-sortable.js?v=332"></script>
+  <script src="assets/js/openshop-tagsinput.js?v=332"></script>
+  <script src="assets/js/openshop-validator.js?v=332"></script>
+  <script src="assets/js/openshop-datepicker.js?v=332"></script>
+    <script src="assets/js/openshop-color-picker.js?v3332"></script>
+  <script>
+
+  window._P = function(key) {
+      var prevodi = { 'Select': 'Izaberi', 'Upload': 'Prebaci' };
+      return prevodi[key] || key;
+  };
+
+  OS(function() {
+      console.log('OpenShop framework uspešno inicijalizovan!');
+      OS('.datum-akcije').DatePicker({
+          disablePast: true, // Blokira jučerašnje dane
+          onSelect: function(izabranDatum) {
+              console.log("Admin je izabrao datum: " + izabranDatum);
+          }
+      });
+
+
+         OS('#color').SmartColorUI();
+      // 1. Inicijalizacija tvojih narandžastih Custom Selects modula
+      OS('#sel-cat').Selects({  issearch: true,});
+      OS("#sel-tags").Selects({
+        issearch: true,
+      onSelect: function(izabraniNiz, nativeSelect) {
+          // izabraniNiz je već niz oblika: ["new", "sale", "top"]
+          console.log("Kliknuti ID-evi (Niz):", izabraniNiz);
+
+          // Ako je #test-select obično tekstualno ili hidden polje, pretvori niz u string:
+      ///  OS("#sel-tags").val(izabraniNiz.join(","));
+
+          // Ako je #test-select drugi nativni <select multiple>, samo prosledi niz:
+          // OS("#test-select").val(izabraniNiz);
+      }
+  });
+      OS('#test-select').Selects({
+          issearch: true,
+          placeholder: 'Izaberi opciju...',
+          onSelect: function(value, text) {
+          ///  OS("#test-select").val(value.join(","));
+              console.log("Kliknut ID:", value.join(","), "Status:", text);
+          }
+      });
+
+      // 2. INICIJALIZACIJA ZA TAGOVE: Pokretanje novog Native TagsInputa
+      OS('#testniTagovi').tagsInput({
+          placeholder: 'Dodaj tag...'
+      });
+
+
+       OS('#os-img-up').ImagePreview({
+       });
+      OS('#avatar-input').ImagePreview({
+        defaultImg:'krema.jpg'
+      });
+      // 4. Integracija celokupne forme sa novim OpenShop Validatorom
+      OS('#os-main-form').validateForm({
+          'product_title': 'required|min:3',
+          'tags': 'required' // Proverava naš novi TagsInput preko name="tags" atributa
+      }, function(cistiPodaci) {
+          // --- USPEH: Forma je validna, puštamo nativni PHP submit ---
+          this.submit();
+      }, function(sveGreske) {
+          // --- GREŠKA: Ispaljuje se tvoj ugrađeni OS.notify sistem ---
+          OS.notify.error('Molimo ispravite greške na formi pre čuvanja podatak!', 3000);
+      });
+
+      // ==========================================================================
+      // VEZIVANJE KLIKOVA ZA TVOJ NOTIFICATION ENGINE (KONTROLNA TABLA DESNO)
+      // ==========================================================================
+      OS('#btn-test-success').on('click', function() {
+          OS.notify.success(OS("#test-select").val(), 3000);
+      });
+
+      OS('#btn-test-error').on('click', function() {
+          OS.notify.error('Došlo je do sistemske greške. Pokušajte ponovo.', 4000);
+      });
+
+      OS('#btn-test-loading').on('click', function() {
+          OS.notify.loading('Sinhronizacija magacina u toku...');
+          setTimeout(function() {
+              OS.notify.success('Magacin uspešno ažuriran!', 2500);
+          }, 3000);
+      });
+
+      OS('#btn-test-confirm').on('click', function() {
+          OS.notify.confirm('Da li sigurno želiš da obrišeš ovu pošiljku?', function() {
+              OS.notify.error('Pošiljka je trajno obrisana iz sistema.', 4000);
+          });
+      });
+  });
+  </script>
+
+
+
+</body>
+</html>
