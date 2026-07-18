@@ -1,6 +1,6 @@
 # OpenShop Engine — Testing Environment
 
-### 🚀 [Launch Live Demo Here](https://github.io)
+### 🚀 [Launch Live Demo Here](https://zoranmil.github.io/os-js/)
 
 This repository serves as a live sandbox and testing environment for developing, testing, and demonstrating custom JavaScript modules and notification systems integrated within the OpenShop (OS) core library.
 
