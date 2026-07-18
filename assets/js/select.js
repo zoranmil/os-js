@@ -152,91 +152,77 @@
  };
 
 
-Selects.prototype.bindEvents = function() {
-    // Otvaranje / Zatvaranje menija
-    this.config.button.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.isDropdownOpen = !this.isDropdownOpen;
-        this.config.dropdown.style.display = this.isDropdownOpen ? 'block' : 'none';
-        if (this.isDropdownOpen && this.config.issearch) {
-            setTimeout(() => this.config.search.focus(), 50);
-        }
-    });
+ Selects.prototype.bindEvents = function() {
+     const self = this;
 
-    // Klik na stavku
-    this.config.dropdown.addEventListener('click', (e) => {
-        let stavka = e.target.closest('.dropdown-item');
-        if (stavka) {
-            e.preventDefault();
-            let vrednost = stavka.getAttribute('data-value');
+     // 1. OTVARANJE MENIJA (Preko OS selektora)
+     OS(this.config.button).on('click', (e) => {
+         e.stopPropagation();
+         this.isDropdownOpen = !this.isDropdownOpen;
+         this.config.dropdown.style.display = this.isDropdownOpen ? 'block' : 'none';
 
-            if (!this.ismultiselect) {
-                // --- LOGIKA ZA SINGLE SELECT ---
-                this.didoption.value = vrednost;
-                this.isDropdownOpen = false;
-                this.config.dropdown.style.display = 'none';
-                this.renderujStavkeMenzija();
+         if (this.isDropdownOpen && this.config.issearch) {
+             setTimeout(() => this.config.search.focus(), 50);
+         }
+     });
 
-                if (typeof this.config.onSelect === 'function') {
-                    this.config.onSelect(vrednost, this.didoption);
-                }
-            } else {
-                // --- LOGIKA ZA MULTIPLE SELECT ---
-                // Pronađi odgovarajuću opciju u skrivenom selectu i obrni joj stanje
-                for (let i = 0; i < this.didoption.options.length; i++) {
-                    if (this.didoption.options[i].value === vrednost) {
-                        this.didoption.options[i].selected = !this.didoption.options[i].selected;
-                        break;
-                    }
-                }
+     // 2. KLIK NA STAVKU (Koristimo našu popravljenu delegaciju iz Core-a!)
+     OS(this.config.dropdown).on('click', '.dropdown-item', function(e) {
+         e.preventDefault();
+         const vrednost = this.getAttribute('data-value');
 
-                // Osveži iscrtavanje checkboxova na ekranu (Meni ostaje OTVOREN)
-                this.renderujStavkeMenzija();
+         if (!self.ismultiselect) {
+             self.didoption.value = vrednost;
+             self.isDropdownOpen = false;
+             self.config.dropdown.style.display = 'none';
+         } else {
+             const opt = Array.from(self.didoption.options).find(o => o.value == vrednost);
+             if (opt) opt.selected = !opt.selected;
+         }
 
-                // Okidanje nativnog change događaja da forma zna da je došlo do promene
-                this.didoption.dispatchEvent(new Event('change', { bubbles: true }));
+         self.renderujStavkeMenzija();
+         self.didoption.dispatchEvent(new Event('change', { bubbles: true }));
 
-                // Poziv onSelect funkcije sa nizom svih trenutno izabranih ID-jeva
-                if (typeof this.config.onSelect === 'function') {
-                    let sviIzabrani = Array.from(this.didoption.options).filter(o => o.selected).map(o => o.value);
-                    this.config.onSelect(sviIzabrani, this.didoption);
-                }
-            }
-        }
-    });
+         if (typeof self.config.onSelect === 'function') {
+             const result = self.ismultiselect ?
+                 Array.from(self.didoption.options).filter(o => o.selected).map(o => o.value) :
+                 vrednost;
+             self.config.onSelect(result, self.didoption);
+         }
+     });
 
-    // Pretraga
-    if (this.config.issearch) {
-        let tajmer;
-        this.config.search.addEventListener('input', (e) => {
-            let val = e.target.value;
+     // 3. ASINHRONA PRETRAGA (Snaga OS.debounce-a!)
+     if (this.config.issearch) {
+         // Definišemo debounced funkciju
+         const procesirajPretragu = OS.debounce((val) => {
+             if (this.config.ajax) {
+                 this.izvrsiAjaxPretragu(val);
+             } else {
+                 const pretvoreno = val.toLowerCase();
+                 document.querySelectorAll(`#${this.ids}-list li`).forEach(li => {
+                     if (li.classList.contains('select-search-box')) return;
+                     li.style.display = li.textContent.toLowerCase().includes(pretvoreno) ? '' : 'none';
+                 });
+             }
+         }, this.config.ajax ? (this.config.ajax.delay || 300) : 100);
 
-            if (this.config.ajax) {
-                clearTimeout(tajmer);
-                tajmer = setTimeout(() => {
-                    this.izvrsiAjaxPretragu(val);
-                }, this.config.ajax.delay || 250);
-            } else {
-                let pretvoreno = val.toLowerCase();
-                let sveStavke = this.config.rezultatiKontejner.querySelectorAll('.dropdown-item');
-                sveStavke.forEach(el => {
-                    let li = el.closest('li');
-                    if (li) li.style.display = el.textContent.toLowerCase().includes(pretvoreno) ? '' : 'none';
-                });
-            }
-        });
-        this.config.search.addEventListener('click', (e) => e.stopPropagation());
-    }
+         // Vezujemo input događaj
+         OS(this.config.search).on('input', (e) => {
+             procesirajPretragu(e.target.value);
+         });
 
-    // Zatvaranje klikom sa strane
-    document.addEventListener('click', (e) => {
-        if (!this.config.button.contains(e.target) && this.isDropdownOpen) {
-            if (this.config.issearch && this.config.search.contains(e.target)) return;
-            this.isDropdownOpen = false;
-            this.config.dropdown.style.display = 'none';
-        }
-    });
-};
+         OS(this.config.search).on('click', (e) => e.stopPropagation());
+     }
+
+     // 4. ZATVARANJE KLIKOM VAN ELEMENTA
+     document.addEventListener('click', (e) => {
+         if (!this.config.button.contains(e.target) && this.isDropdownOpen) {
+             if (this.config.issearch && this.config.search.contains(e.target)) return;
+             this.isDropdownOpen = false;
+             this.config.dropdown.style.display = 'none';
+         }
+     });
+ };
 
 Selects.prototype.izvrsiAjaxPretragu = function(pojam) {
     if (!this.config.ajax || pojam.trim().length < (this.config.ajax.minimumInputLength || 1)) return;
