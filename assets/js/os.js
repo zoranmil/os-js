@@ -89,21 +89,52 @@
 
       each: function(callback)
       {
-         for(var i = 0; i < this.length; i++)
-         {
-            if(callback.call(this[i], i, this[i]) === false) break;
-         }
-         return this;
+          for(var i = 0; i < this.length; i++)
+          {
+
+              if(callback.call(this[i], i, this[i]) === false) break;
+          }
+          return this;
       },
 
       html: function(htmlString)
       {
-         if(htmlString === undefined) return this[0] ? this[0].innerHTML : '';
-         return this.each(function()
-         {
-            if(this) this.innerHTML = htmlString;
-         });
+      if(htmlString === undefined) return this[0] ? this[0].innerHTML : '';
+      return this.each(function()
+      {
+      if(!this) return;
+
+      // Upisujemo HTML strukturu u trenutni element
+      this.innerHTML = htmlString;
+
+      // Pronalazimo sve <script> tagove unutar ubačenog sadržaja
+      var scripts = this.querySelectorAll('script');
+
+      for(var i = 0; i < scripts.length; i++)
+      {
+      var oldScript = scripts[i];
+      var scriptCode = oldScript.textContent || oldScript.innerText || '';
+
+      if(scriptCode.trim().length > 0)
+      {
+      try
+      {
+      // Automatski mapiramo lokalne funkcije u globalni window prostor
+      var globalCode = scriptCode.replace(/function\s+([a-zA-Z0-9_]+)\s*\(/g, 'window.$1 = function(');
+      window.eval(globalCode);
+      }
+      catch(e)
+      {
+      console.error("Greška u OS.html() globalnoj evaluaciji skripte:", e);
+      }
+      }
+
+      // Brišemo iskorišćeni tag da ne prlja DOM
+      if (oldScript.parentNode) oldScript.parentNode.removeChild(oldScript);
+      }
+      });
       },
+
 
       text: function(textString)
       {
@@ -155,25 +186,17 @@
       },
 
       // --- PAMETNO DODATE METODE (Prvi blok) ---
-      show: function()
-      {
-         return this.each(function()
-         {
-            if(!this) return;
-            this.style.display = "";
-            if(window.getComputedStyle(this).display === "none")
-            {
-               this.style.display = "block";
-            }
-         });
+      show: function() {
+          return this.each(function() {
+              if(this) this.style.display = '';
+          });
       },
 
-      hide: function()
-      {
-         return this.each(function()
-         {
-            if(this) this.style.display = "none";
-         });
+      // 2. Unapređena hide metoda
+      hide: function() {
+          return this.each(function() {
+              if(this) this.style.display = 'none';
+          });
       },
 
       remove: function()
@@ -221,6 +244,7 @@
          }
          return false;
       },
+
       addClass: function(c)
       {
          if(!c || typeof c !== 'string') return this;
@@ -243,22 +267,16 @@
          });
       },
 
-      toggleClass: function(c)
-      {
-         if(!c || typeof c !== 'string') return this;
-         var classes = c.split(/\s+/).filter(Boolean);
-         return this.each(function()
-         {
-            if(!this || !this.classList) return;
-            for(var i = 0; i < classes.length; i++) this.classList.toggle(classes[i]);
-         });
+      toggleClass: function(className) {
+          return this.each(function() {
+              if(this) this.classList.toggle(className);
+          });
+      },
+      hasClass: function(className) {
+          if (!this[0]) return false;
+          return this[0].classList.contains(className);
       },
 
-      hasClass: function(c)
-      {
-         if(!this[0] || !this[0].classList) return false;
-         return this[0].classList.contains(c);
-      },
 
       css: function(prop, value)
       {
@@ -600,7 +618,96 @@
                this.insertAdjacentHTML('afterend', a);
             }
          });
-      }
+      },
+      // Pakuje sve elemente forme u URL query string (Standardna Select2/jQuery logika)
+      serialize: function()
+      {
+       var form = this[0];
+       if (!form || form.tagName !== 'FORM') return '';
+       var pairs = [];
+
+       for (var i = 0; i < form.elements.length; i++) {
+       var el = form.elements[i];
+       if (!el.name || el.disabled || el.type === 'file' || el.type === 'reset' || el.type === 'submit' || el.type === 'button') continue;
+
+       if (el.type === 'select-multiple') {
+       for (var j = 0; j < el.options.length; j++) {
+       if (el.options[j].selected) {
+       pairs.push(encodeURIComponent(el.name) + '=' + encodeURIComponent(el.options[j].value));
+       }
+       }
+       } else if ((el.type !== 'checkbox' && el.type !== 'radio') || el.checked) {
+       pairs.push(encodeURIComponent(el.name) + '=' + encodeURIComponent(el.value));
+       }
+       }
+       return pairs.join('&');
+      },
+
+      // Automatski generiše FormData objekat iz forme, uključujući selektovane fajlove/slike
+      serializeFormData: function()
+      {
+       var form = this[0];
+       if (!form || form.tagName !== 'FORM') return new FormData();
+       return new FormData(form);
+      },
+
+      // Bezbedno upisivanje HTML-a sa filtriranjem XSS skripti
+      safeHtml: function(htmlString)
+      {
+       if(htmlString === undefined) return this[0] ? this[0].innerHTML : '';
+
+       // Primitivni, ali brzi XSS sanitizer za produkciju
+       var cleanString = htmlString
+       .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gi, '') // Brise <script> blokove
+       .replace(/on\w+\s*=\s*['"][^'"]*['"]/gi, '')         // Brise inline evente (onerror, onclick, onload...)
+       .replace(/javascript:\s*[^'"]*/gi, '');              // Brise pseudo-protokole
+
+       return this.each(function()
+       {
+       if(this) this.innerHTML = cleanString;
+       });
+      },
+
+      // Pretvara osetljive karaktere u HTML entitete (Korisno za tekstualni prikaz)
+      escape: function(str) {
+       if (!str) return '';
+       return str.replace(/&/g, "&amp;")
+       .replace(/</g, "&lt;")
+       .replace(/>/g, "&gt;")
+       .replace(/"/g, "&quot;")
+       .replace(/'/g, "&#039;");
+      },
+      // Dodaje klasu elementu i automatski je uklanja nakon X milisekundi (Idealno za "Uspešno sačuvano" animacije)
+      addClassTemporarily: function(className, duration)
+      {
+       var ms = duration || 1500;
+       return this.each(function()
+       {
+       if(!this || !this.classList) return;
+       var self = this;
+       self.classList.add(className);
+       setTimeout(function() {
+       self.classList.remove(className);
+       }, ms);
+       });
+      },
+
+      // Vraća sve elemente koji dele isti roditeljski čvor (Kao jQuery .siblings())
+      siblings: function()
+      {
+       var siblingsElements = [];
+       var el = this[0];
+       if (!el || !el.parentNode) return OpenShop([]);
+
+       var sibling = el.parentNode.firstChild;
+       while (sibling) {
+       if (sibling.nodeType === 1 && sibling !== el) {
+       siblingsElements.push(sibling);
+       }
+       sibling = sibling.nextSibling;
+       }
+       return OpenShop(siblingsElements);
+      },
 
 
    }; // Ovde se zatvara OpenShop.fn / OpenShop.prototype
@@ -777,72 +884,64 @@
    };
 
    // Glavna AJAX omotnica
+   // Glavna AJAX omotnica - POPRAVLJENA VERZIJA
    OpenShop.ajax = function(options)
    {
-      var url = options.url;
-      var method = (options.type || options.method || 'GET').toUpperCase();
-      var fetchOptions = {
-         method: method,
-         headers:
-         {}
-      };
+    var url = options.url;
+    var method = (options.type || options.method || 'GET').toUpperCase();
+    var fetchOptions = {
+    method: method,
+    headers: options.headers || {}
+    };
 
-      // Obrada podataka za GET zahteve (lepe se na URL)
-      if(method === 'GET' && options.data)
-      {
-         var query = OpenShop.param(options.data);
-         url += (url.indexOf('?') === -1 ? '?' : '&') + query;
-      }
+    if(method === 'GET' && options.data)
+    {
+    var query = OpenShop.param(options.data);
+    url += (url.indexOf('?') === -1 ? '?' : '&') + query;
+    }
 
-      // Obrada podataka za POST zahteve
-      if(method === 'POST' && options.data)
-      {
-         if(options.data instanceof FormData)
-         {
-            fetchOptions.body = options.data;
-            // Fetch sam postavlja ispravan multipart/form-data boundary, ne diraj header
-         }
-         else if(options.contentType && options.contentType.indexOf('application/json') !== -1)
-         {
-            fetchOptions.headers['Content-Type'] = 'application/json';
-            fetchOptions.body = typeof options.data === 'string' ? options.data : JSON.stringify(options.data);
-         }
-         else
-         {
-            fetchOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-            fetchOptions.body = OpenShop.param(options.data);
-         }
-      }
+    if(method === 'POST' && options.data)
+    {
+    if(options.data instanceof FormData)
+    {
+    fetchOptions.body = options.data; // OVO JE FALILO - SADA PRENOSI FAJLOVE!
+    }
+    else if(options.contentType && options.contentType.indexOf('application/json') !== -1)
+    {
+    fetchOptions.headers['Content-Type'] = 'application/json';
+    fetchOptions.body = typeof options.data === 'string' ? options.data : JSON.stringify(options.data);
+    }
+    else
+    {
+    fetchOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    fetchOptions.body = OpenShop.param(options.data);
+    }
+    }
 
-      // Izvršavanje zahteva
-      fetch(url, fetchOptions)
-         .then(function(res)
-         {
-            if(!res.ok) throw new Error(res.statusText);
-
-            // Detekcija tipa odgovora (JSON ili tekst)
-            var contentType = res.headers.get('Content-Type') || '';
-            if(contentType.indexOf('application/json') !== -1)
-            {
-               return res.json();
-            }
-            return res.text();
-         })
-         .then(function(response)
-         {
-            if(typeof options.success === 'function')
-            {
-               options.success(response);
-            }
-         })
-         .catch(function(err)
-         {
-            if(typeof options.error === 'function')
-            {
-               options.error(null, 'error', err);
-            }
-         });
+    var statusCode; // Pamti status kod za error callback
+    fetch(url, fetchOptions)
+    .then(function(res)
+    {
+    statusCode = res.status;
+    if(!res.ok) throw new Error(res.statusText);
+    var contentType = res.headers.get('Content-Type') || '';
+    if(contentType.indexOf('application/json') !== -1) return res.json();
+    return res.text();
+    })
+    .then(function(response)
+    {
+    if(typeof options.success === 'function') options.success(response);
+    })
+    .catch(function(err)
+    {
+    if(typeof options.error === 'function')
+    {
+    // Sada prosleđuje pravi status kod (npr. 404, 500) umesto null
+    options.error(statusCode, 'error', err);
+    }
+    });
    };
+
 
    // Funkcija za proširivanje objekata (Deep clone podržan)
    OpenShop.extend = OpenShop.fn.extend = function()
