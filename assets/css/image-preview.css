@@ -1,0 +1,184 @@
+:root {
+    /* Promenjeno u OpenShop Admin plave nijanse sa tvoje slike */
+    --os-primary: #3b82f6;               /* Kraljevski plava za ivice i aktivna stanja */
+    --os-primary-hover: #1d4ed8;         /* Tamnija plava za prelaz mišem */
+    --os-primary-light: rgba(59, 130, 246, 0.06); /* Blaga plava pozadina za dragover */
+    --os-primary-shadow: rgba(59, 130, 246, 0.15); /* Nežna senka oko polja pri prevlačenju */
+    --os-border: #cbd5e1;                /* Suptilna siva ivica koja se slaže sa tvojim karticama */
+    --os-radius: 10px;                   /* Smanjeno sa 14px na 10px da prati linije ostalih inputa na slici */
+}
+
+/* Glavni kontejner koga drže stabilne dimenzije */
+.image-preview-wrapper {
+    position: relative;
+    width: 100%;
+    height: 240px; /* FIKSIRANO: Ne dopušta da se strana skupi na 0px */
+    background-color: #ffffff;
+    border: 2px dashed var(--os-border);
+    border-radius: var(--os-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* MAKAZE: Sve što izađe van 240px visine biće isečeno */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.image-preview-wrapper:hover {
+    border-color: var(--os-primary);
+    background-color: #fafafa;
+}
+
+.image-preview-wrapper.dragover {
+    border-color: var(--os-primary);
+    background-color: var(--os-primary-light);
+    box-shadow: 0 0 0 5px var(--os-primary-shadow);
+    transform: scale(1.01);
+}
+
+.image-preview-message {
+    z-index: 1;
+    transition: all 0.3s ease;
+    padding: 20px;
+}
+
+.upload-icon-zone {
+    width: 64px;
+    height: 64px;
+    background: #f8fafc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+    color: #64748b;
+    transition: all 0.3s ease;
+}
+
+.image-preview-wrapper:hover .upload-icon-zone {
+    background: var(--os-primary-light);
+    color: var(--os-primary);
+    transform: translateY(-2px);
+}
+
+.upload-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 4px !important;
+}
+
+.upload-subtitle {
+    font-size: 12px;
+    color: #94a3b8;
+    display: block;
+}
+
+/* Zona renderovanja se rasteže tačno unutar okvira */
+.image-preview-render {
+    position: absolute;
+    inset: 0;
+    background-color: #ffffff;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+.image-preview-render.has-img {
+    opacity: 1;
+    visibility: visible;
+}
+
+.image-preview-render img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Smanjuje i drži sliku u okviru bez razvlačenja */
+    padding: 15px;
+    box-sizing: border-box;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.05));
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.image-preview-render.has-img img {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.image-preview-wrapper.has-file-active:hover .image-preview-render img {
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.05)) blur(4px);
+    opacity: 0.6;
+}
+
+/* Dugme za brisanje (Kanta) */
+.btn-remove-preview {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 20;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-remove-preview.is-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.btn-remove-preview.is-visible:hover {
+    transform: scale(1.08) rotate(5deg);
+    background: #dc2626;
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+}
+
+.os-upload-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.os-upload-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.25em;
+    color: var(--os-primary) !important;
+}
+
+.image-preview-wrapper input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 15;
+}
+
+.image-preview-wrapper.has-file-active input[type="file"] {
+    z-index: 1;
+}

@@ -1,0 +1,364 @@
+/* ==========================================================================
+   1. OPENSHOP GALERIJA & DOKUMENTI - OSNOVNI GRID
+   ========================================================================== */
+.hex-container,
+.hex-containerf {
+    overflow: hidden;
+    width: 100%;
+}
+
+.hex-grid,
+.hex-gridf {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding: 10px;
+    margin: 0 -5px;
+    list-style: none;
+    gap: 10px; /* Dodato za stabilan razmak između stavki */
+}
+
+/* Podrazumevani stil za mobilne ekrane - tačno 2 kolone */
+.hex-grid__item {
+    width: calc(50% - 10px);
+    flex: 0 0 calc(50% - 10px);
+    background-color: #fff;
+    margin: 5px;
+    box-sizing: border-box;
+    user-select: none;
+    touch-action: none; /* Sprečava skrolovanje ekrana tokom prevlačenja na mobilnom */
+}
+
+/* Za desktop ekrane šire od 768px - fiksna stabilna širina */
+@media (min-width: 768px) {
+    .hex-grid__item {
+        width: 190px;
+        flex: 0 0 190px;
+    }
+}
+
+/* Rešavanje baga sa prevlačenjem nativnih slika unutar grida */
+.hex-grid__item img {
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Zona za hvatanje elemenata (Handle) */
+.portlet-header {
+    cursor: grab;
+    padding: 5px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+.portlet-header:active {
+    cursor: grabbing;
+}
+
+/* ==========================================================================
+   2. DRAG & DROP ANIMACIJA (OS.Sortable Sistem)
+   ========================================================================== */
+.os-sortable-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Konsolidovan stil za stavku koja se aktivno prevlači */
+.os-dragging {
+    opacity: 0.5 !important;
+    transform: scale(1.04) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+    border-color: #047bf8 !important; /* OpenShop plava ivica */
+    z-index: 9999;
+    cursor: grabbing !important;
+}
+
+/* ==========================================================================
+   3. VEKTORSKE SVG IKONE (Zamena za FontAwesome)
+   ========================================================================== */
+.os-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
+}
+
+.os-icon-arrows {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%236c757d' d='M256 0l96 96H288v128h128v-32l96 96-96 96v-32H288v128h64l-96 96-96-96h64V288H128v32L32 256l96-96v32h128V96h-64L256 0z'/%3E%3C/svg%3E");
+}
+
+.os-icon-trash {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23dc3545' d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z'/%3E%3C/svg%3E");
+}
+
+.os-icon-list {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%236c757d' d='M64 144a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM64 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm0 160a48 48 0 1 0 0-96 48 48 0 1 0 0 96z'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   4. PROGRESS BAR (Nativni Bootstrap zamenski stil)
+   ========================================================================== */
+.meter {
+    height: 6px;
+    position: relative;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.meter > span {
+    display: block;
+    height: 100%;
+    background-color: #0d6efd;
+    transition: width 0.1s linear;
+}
+
+/* ==========================================================================
+   5. NAPREDNI CROP ALAT (Sečenje slika)
+   ========================================================================== */
+.openshop-crop-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.4);
+    z-index: 1999;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 20px;
+    user-select: none;
+}
+
+.openshop-crop-card {
+    max-width: 550px;
+    margin: 5vh auto;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.openshop-crop-workspace {
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    background-color: #0f172a;
+    background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 0);
+    background-size: 16px 16px;
+}
+
+/* Glavni selektor za kadriranje */
+#cropSelector {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 150px;
+    height: 150px;
+    border: 2px dashed rgba(4, 123, 248, 0.8);
+    background: rgba(4, 123, 248, 0.03);
+    cursor: move;
+    box-shadow: 0 0 0 4000px rgba(15, 23, 42, 0.75);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+#cropSelector:active {
+    border: 2px solid #00db8b; /* Neon zelena tokom pomeranja */
+    background: rgba(0, 219, 139, 0.05);
+}
+
+/* Pravilo trećina unutar crop kvadrata */
+#cropSelector::before,
+#cropSelector::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.2);
+    display: none;
+    pointer-events: none;
+}
+
+#cropSelector::before {
+    top: 33.33%; bottom: 33.33%; left: 0; right: 0;
+    border-top: 1px dashed rgba(255, 255, 255, 0.3);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+#cropSelector::after {
+    left: 33.33%; right: 33.33%; top: 0; bottom: 0;
+    border-left: 1px dashed rgba(255, 255, 255, 0.3);
+    border-right: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+#cropSelector:active::before,
+#cropSelector:active::after {
+    display: block; /* Mreža se prikazuje samo tokom akcije */
+}
+
+/* Kontrolne tačke za promenu veličine (Resizers) */
+.crop-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #047bf8;
+    border: 1px solid #ffffff;
+    border-radius: 50%;
+    z-index: 20;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: background-color 0.1s ease;
+}
+
+#cropSelector:active .crop-handle {
+    background: #00db8b;
+}
+
+/* Pozicioniranje i kursori za 8 tačaka */
+.crop-handle.nw { top: -5px; left: -5px; cursor: nwse-resize; }
+.crop-handle.ne { top: -5px; right: -5px; cursor: nesw-resize; }
+.crop-handle.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+.crop-handle.se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+.crop-handle.n  { top: -5px; left: calc(50% - 5px); cursor: ns-resize; }
+.crop-handle.s  { bottom: -5px; left: calc(50% - 5px); cursor: ns-resize; }
+.crop-handle.e  { top: calc(50% - 5px); right: -5px; cursor: ew-resize; }
+.crop-handle.w  { top: calc(50% - 5px); left: -5px; cursor: ew-resize; }
+
+/* CSS Ikona za Crop alatku */
+.os-custom-crop {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    position: relative;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+.os-custom-crop::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #6c757d;
+    border-left: 2px solid #6c757d;
+}
+
+.os-custom-crop::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 10px;
+    height: 10px;
+    border-bottom: 2px solid #6c757d;
+    border-right: 2px solid #6c757d;
+}
+
+.portlet-header:hover .os-custom-crop::before,
+.portlet-header:hover .os-custom-crop::after {
+    border-color: #047bf8;
+}
+
+/* ==========================================================================
+   6. DUGMIĆI I ZATVARANJE MODALA
+   ========================================================================== */
+.openshop-close-btn {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: #94a3b8;
+    transition: color 0.2s ease, transform 0.2s ease;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.openshop-close-btn:hover {
+    color: #ef4444;
+    transform: rotate(90deg);
+}
+
+/* CSS "X" Ikona za zatvaranje */
+.os-icon-close {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    position: relative;
+    vertical-align: middle;
+    margin-right: 4px;
+    cursor: pointer;
+}
+
+.os-icon-close::before,
+.os-icon-close::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #6c757d;
+    top: 50%;
+    left: 0;
+    margin-top: -1px;
+}
+
+.os-icon-close::before { transform: rotate(45deg); }
+.os-icon-close::after { transform: rotate(-45deg); }
+
+/* Pomoćne klase za stare interfejse */
+.crvena { color: red; }
+.cleared {
+    clear: both;
+    padding: 10px;
+    margin: 10px;
+}
+.btns {
+    width: 30%;
+    float: right;
+    margin: 0 22px 0 0;
+}
+.btnsb {
+    padding: 5px;
+    font-size: 11px;
+}
+.os-icon-upload {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    /* Potpuno enkodovan SVG kod (rešava problem sa renderovanjem u Firefoxu) */
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2015v4a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2v-4%22%2F%3E%3Cpolyline%20points%3D%2217%208%2012%203%207%208%22%2F%3E%3Cline%20x1%3D%2212%22%20y1%3D%223%22%20x2%3D%2212%22%20y2%3D%2215%22%2F%3E%3C%2Fsvg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+/* Ikona za Upload (Oblak sa strelicom) */
+
+.os-icon-upload::before {
+    content: ""; /* Bez ovoga se slika ne prikazuje */
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+}
+/* Ikona za Save (Disketa / Sačuvaj raspored) */
+.os-icon-save {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    /* Potpuno ispravan xmlns i enkodovan SVG sa belom bojom linija (#ffffff) */
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M19%2021H5a2%202%200%200%201-2-2V5a2%202%200%200%201%202-2h11l5%205v11a2%202%200%200%201-2%202z%22%2F%3E%3Cpolyline%20points%3D%2217%2021%2017%2013%207%2013%207%2021%22%2F%3E%3Cpolyline%20points%3D%227%203%207%208%2015%208%22%2F%3E%3C%2Fsvg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.os-icon-save::before {
+    content: ""; /* Bez ovoga se slika ne prikazuje */
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+}

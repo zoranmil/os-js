@@ -1,0 +1,110 @@
+/* ==========================================================================
+   OPENSHOP RANGE SLIDER - UI KIT
+   ========================================================================== */
+
+:root {
+    --os-slider-primary: #fb923c; /* Tvoja narandžasta */
+    --os-slider-track: #e2e8f0;
+    --os-slider-handle-size: 20px;
+}
+
+/* Plava/Narandžasta linija koja označava izabrani opseg */
+.os-slider-range {
+    position: absolute;
+    height: 100%;
+    background: var(--os-slider-primary);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+/* Stil za ručice (Handles) */
+.os-slider-handle {
+    position: absolute;
+    top: 50%;
+    width: var(--os-slider-handle-size);
+    height: var(--os-slider-handle-size);
+    background: #ffffff;
+    border: 2px solid var(--os-slider-primary);
+    border-radius: 50%;
+    cursor: grab;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+}
+
+.os-slider-handle:hover {
+    box-shadow: 0 0 0 5px rgba(251, 146, 60, 0.15);
+}
+
+.os-slider-handle:active {
+    cursor: grabbing;
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Stilovi za plutajuće bedževe (Tooltips) */
+.os-slider-tooltip {
+    position: absolute;
+    bottom: 28px; /* Malo više iznad ručice */
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background: #1e293b; /* Tamna moderna siva */
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Pokaži tooltip kada se pređe preko kontejnera ili kada se vuče */
+.os-slider-container:hover .os-slider-tooltip,
+.os-slider-handle:active .os-slider-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Strelica na dnu tooltpa */
+.os-slider-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1e293b;
+}
+
+/* Donji tekstualni ispis vrednosti */
+.os-slider-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.os-slider-values span {
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+}
+
+.os-slider-values strong {
+    color: var(--os-slider-primary);
+}
+
+/* Dodatak: vizuelni feedback dok se vuče */
+.is-dragging .os-slider-range {
+    background: var(--os-slider-primary);
+    filter: brightness(1.1);
+}

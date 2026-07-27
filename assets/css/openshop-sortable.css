@@ -1,0 +1,61 @@
+/* ==========================================================================
+OPENSHOP SORTABLE - CORE STYLES
+========================================================================== */
+
+/* 1. Kontejner koji prihvata sortiranje */
+[os-sortable-container="true"] {
+min-height: 50px;
+position: relative;
+}
+
+/* 2. Stavka koja se može pomerati */
+.os-sortable-item {
+transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), background-color 0.2s ease;
+user-select: none;
+-webkit-user-drag: element;
+}
+
+/* 3. AKTIVNO STANJE (Dok korisnik drži i vuče element) */
+.os-dragging {
+opacity: 0.4 !important;
+transform: scale(1.02) !important;
+background-color: rgba(251, 146, 60, 0.1) !important; /* OpenShop Orange Light */
+border: 2px dashed #fb923c !important;
+z-index: 9999 !important;
+cursor: grabbing !important;
+}
+
+/* 4. SPECIJALNO ZA TABELE (Fix za TR kolaps) */
+table[os-sortable-container="true"] tbody tr.os-dragging {
+display: table !important; /* Force table layout tokom draga */
+table-layout: fixed;
+width: 100%;
+}
+
+/* 5. DUAL COLUMN - Vizuelni indikator zone za drop */
+.sortable-list-wrapper {
+border: 2px solid transparent;
+transition: border-color 0.3s ease;
+}
+
+.sortable-list-wrapper:hover {
+border-color: rgba(251, 146, 60, 0.3);
+}
+
+/* 6. HANDLE (Hvataljka) - Stil za tvoju ikonicu */
+.handle, .handles {
+cursor: grab;
+padding: 5px;
+color: #94a3b8;
+transition: color 0.2s;
+}
+
+.handle:hover {
+color: #fb923c;
+}
+
+/* 7. MOBILNI FIX: Onemogući default skrolovanje dok traje drag */
+.is-dragging {
+overflow: hidden !important;
+touch-action: none !important;
+}

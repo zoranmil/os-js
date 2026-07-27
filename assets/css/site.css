@@ -1,0 +1,79 @@
+
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.swiper-products {
+    padding: 20px 0 40px 0;
+}
+.font-13 { font-size: 0.813rem; }
+.font-14 { font-size: 0.875rem; }
+/* Osigurava da se futer ne lepi za vrh ako je uneti tekst kratak */
+.open-blank-container { min-height: 60vh; }
+/* Stilovi za lepši prikaz kartica proizvoda */
+.product-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+/* Fiksirana mini korpa sa desne strane na desktopu */
+.sticky-cart-sidebar {
+    position: sticky;
+    top: 90px;
+}
+
+/* Uklanjanje podrazumevanih okvira sa dugmića ikonica u nav-baru */
+.nav-icon-btn {
+    background: none;
+    border: none;
+    box-shadow: none !important;
+}
+.hover-danger:hover {
+    color: #dc3545 !important;
+}
+.moj-mega-meni:hover .dropdown-menu {
+    display: flex !important;
+}
+.font-13 { font-size: 0.813rem; }
+.font-14 { font-size: 0.875rem; }
+/* Osigurava da se futer ne lepi za vrh ako je uneti tekst kratak */
+.open-blank-container { min-height: 60vh; }
+/* Stilovi za lepši prikaz kartica proizvoda */
+
+    .font-13 { font-size: 0.813rem; }
+    .font-14 { font-size: 0.875rem; }
+    /* Osigurava da se futer ne lepi za vrh ako je uneti tekst kratak */
+    .open-blank-container { min-height: 60vh; }
+    /* Stilovi za lepši prikaz kartica proizvoda */
+    .product-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+
+    /* Fiksirana mini korpa sa desne strane na desktopu */
+    .sticky-cart-sidebar {
+        position: sticky;
+        top: 90px;
+    }
+
+    /* Uklanjanje podrazumevanih okvira sa dugmića ikonica u nav-baru */
+    .nav-icon-btn {
+        background: none;
+        border: none;
+        box-shadow: none !important;
+    }
+    .hover-danger:hover {
+        color: #dc3545 !important;
+    }
+    .moj-mega-meni:hover .dropdown-menu {
+        display: flex !important;
+    }
