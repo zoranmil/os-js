@@ -16,7 +16,9 @@
     <link rel="stylesheet" href="assets/css/select.css?v=232">
     <link rel="stylesheet" href="assets/css/image-preview.css?v=2321">
   <link rel="stylesheet" href="assets/css/openshop-tagsinput.css?v=2321">
-    <link rel="stylesheet" href="assets/css/openshop-datepicker.css?v=2321">
+    <link rel="stylesheet" href="assets/css/openshop-datepicker.css?v=04221">
+    <link rel="stylesheet" href="assets/css/openshop-sortable.css?v=14221">
+      <link rel="stylesheet" href="assets/css/openshop-galery.css?v=37">
     <style>
         /**
          * OPENSHOP UI - BRANDING & CORE STYLES
@@ -87,8 +89,35 @@
           border-top: 4px solid #495057;
         }
 
+               #console-log {
+                   background: #222;
+                   color: #00ff00;
+                   padding: 15px;
+                   border-radius: 4px;
+                   font-family: monospace;
+                   margin-top: 15px;
+                   white-space: pre-wrap;
+               }
+               .os-slider-wrapper {
+                   width: 100%;
+                   max-width: 400px;
+                   margin: 40px auto;
+                   padding: 0 15px;
+               }
+               .os-slider-container {
+                   position: relative;
+                   width: 100%;
+                   height: 6px;
+                   background: #e2e8f0;
+                   border-radius: 10px;
+                   user-select: none;
+                   cursor: pointer;
+                   margin: 30px 0; /* Prostor za tooltipe iznad */
+               }
 
     </style>
+    <link rel="stylesheet" href="assets/css/openshop.range.css?v=2321">
+    <link rel="stylesheet" href="assets/css/openshop.slider.css?v=1s5rr">
 </head>
 <body >
 
@@ -110,7 +139,7 @@
               <div class="card">
                   <div class="card-header"><i class="fa-solid fa-cube me-2 text-primary"></i> Testiranje Modula</div>
                   <div class="card-body">
-                      <form id="os-main-form"  method="post"  enctype="multipart/form-data">
+                      <form id="os-main-form" action="index.php" method="post"  enctype="multipart/form-data">
                         <div class="mb-3">
                             <label class="form-label fw-bold">4. KLJUČNE REČI / TAGOVI (TagsInput):</label>
                             <!-- Čisto tekstualno polje koje naš plugin pretvara u narandžaste bedževe -->
@@ -161,7 +190,7 @@
                               <input type="file" id="os-img-up" name="moj_fajl">
                           </div>
 
-                          <button type="button" class="btn btn-primary btn-lg w-100 shadow">
+                          <button type="submit" class="btn btn-primary btn-lg w-100 shadow">
                               SAČUVAJ PODATKE
                           </button>
                       </form>
@@ -560,8 +589,905 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="card shadow-sm border-0 mb-5">
+                    <div class="card-header py-3 text-secondary bg-white border-bottom-0">
+                        <i class="fa-solid fa-bell me-2 text-info"></i> 5.JS DatePicker (v2.9.5 - OpenShop Optimized)
+                    </div>
+                    <div class="card-body pt-0">
+                <div class="card border-0 shadow-sm p-4 mb-4" style="max-width: 400px; border-radius: 12px;">
+                    <label class="form-label fw-bold text-secondary small text-uppercase mb-2">
+                        <i class="fa-solid fa-calendar-days me-1 text-primary"></i>
+                        Planirani datum isporuke
+                    </label>
 
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fa-solid fa-calendar-day text-muted"></i>
+                        </span>
+                        <!-- Tvoj input na koji kačimo DatePicker     format: 'DD/MM/YYYY',-->
+                        <input type="text"
+                               id="os-datum"
+                               name="datum_isporuke"
+                               class="form-control border-start-0 ps-0 shadow-none"
+                               placeholder="Izaberite datum..."
+                               data-min="today"
+                               autocomplete="off" value="12/09/2026">
+                    </div>
+
+                    <div id="info-datum" class="mt-2 small text-muted italic" style="display:none;">
+                        Izabran datum: <strong class="text-dark"></strong>
+                    </div>
+                </div>
+              </div>
+
+
+              </div>
+              <div class="card shadow-sm border-0 mb-5">
+                  <div class="card-header py-3 text-secondary bg-white border-bottom-0">
+                      <i class="fa-solid fa-bell me-2 text-info"></i> 6. RANGE SLIDER - UI KIT (v2.1 - OpenShop Optimized)
+                  </div>
+                  <div class="card-body pt-0">
+                    <div class="os-slider-wrapper">
+                        <!-- Slider sa parametrima -->
+                        <div class="os-slider-container" id="priceSlider" data-min="0" data-max="2500" data-start-min="500" data-start-max="1800">
+                            <div class="os-slider-track">
+                                <div class="os-slider-range"></div>
+                            </div>
+                            <!-- Minimalna ručica sa bedžom -->
+                            <div class="os-slider-handle handle-min" tabindex="0">
+                                <div class="os-slider-tooltip"></div>
+                            </div>
+                            <!-- Maksimalna ručica sa bedžom -->
+                            <div class="os-slider-handle handle-max" tabindex="0">
+                                <div class="os-slider-tooltip"></div>
+                            </div>
+                        </div>
+
+                        <!-- Statični prikaz ispod slidera -->
+                        <div class="os-slider-values">
+                            <span>Od: <strong id="minVal">500</strong> RSD</span>
+                            <span>Do: <strong id="maxVal">1800</strong> RSD</span>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card shadow-sm border-0 mb-5">
+      <div class="card-header py-3 text-secondary bg-white border-bottom-0">
+          <i class="fa-solid fa-arrows-up-down-left-right me-2 text-info"></i> 7. NATIVNI ULTRA-BRZI SORTABLE ENGINE (v1.5 - OpenShop Sortable)
+      </div>
+      <div class="card-body pt-0">
+          <h5 class="card-title mb-3 text-dark fw-bold">Dokumentacija i Uputstvo</h5>
+          <p class="card-text text-muted small">
+              Profesionalni Drag & Drop engine razvijen da zameni teške biblioteke poput jQuery UI. Koristi <strong>Pitagorinu teoremu</strong> za proračun 2D rastojanja, što omogućava precizno sortiranje u matricama (gridu) i listama.
+          </p>
+
+          <hr>
+
+          <!-- Sekcija: Tri načina rada -->
+          <h6 class="fw-bold text-dark mb-3 small text-uppercase">Načini primene:</h6>
+          <div class="row g-3 mb-4">
+              <div class="col-md-4">
+                  <div class="p-3 border rounded bg-light">
+                      <strong class="d-block small text-primary">Standardna Lista</strong>
+                      <code class="x-small">OS('#lista').Sortable();</code>
+                      <p class="x-small text-muted mt-2 mb-0">Pretvara običan <code>&lt;ul&gt;</code> ili <code>&lt;div&gt;</code> u sortabilnu listu.</p>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="p-3 border rounded bg-light">
+                      <strong class="d-block small text-primary">TR Redovi u Tabeli</strong>
+                      <code class="x-small">OS('#tabela tbody').Sortable();</code>
+                      <p class="x-small text-muted mt-2 mb-0">Automatski detektuje <code>tbody</code> i fiksira širinu ćelija (TR ghost fix) tokom prevlačenja.</p>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="p-3 border rounded bg-light">
+                      <strong class="d-block small text-primary">Dual Column DnD</strong>
+                      <code class="x-small">OS.initDualColumnDnD(s, t);</code>
+                      <p class="x-small text-muted mt-2 mb-0">Omogućava unakrsno prebacivanje elemenata između dve nezavisne kolone.</p>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Sekcija: Karakteristike -->
+          <h6 class="fw-bold text-dark mb-3 small text-uppercase">Tehničke karakteristike:</h6>
+          <ul class="small text-secondary ps-3">
+              <li class="mb-1"><strong>Pitagorin 2D Engine:</strong> Proračunava distancu od centra elementa (X i Y), čime eliminiše "skakanje" elemenata u grid layout-u.</li>
+              <li class="mb-1"><strong>Touch Native:</strong> Implementiran <code>touchmove</code> i <code>elementFromPoint</code> sistem za besprekoran rad na mobilnim telefonima.</li>
+              <li class="mb-1"><strong>Table Stacking Fix:</strong> Tokom prevlačenja TR elemenata, engine dinamički zaključava <code>computedWidth</code> svake ćelije.</li>
+          </ul>
+
+      </div>
+  </div>
+  <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white fw-bold">1. Standardna Lista</div>
+      <div class="card-body">
+          <ul id="lista-kategorija" class="list-group">
+              <li class="list-group-item d-flex align-items-center" data-id="101">
+                  <i class="handle material-icons-outlined me-3">drag_indicator</i>
+                  <span>Mobilni telefoni</span>
+              </li>
+              <li class="list-group-item d-flex align-items-center" data-id="102">
+                  <i class="handle material-icons-outlined me-3">drag_indicator</i>
+                  <span>Laptop računari</span>
+              </li>
+              <li class="list-group-item d-flex align-items-center" data-id="103">
+                  <i class="handle material-icons-outlined me-3">drag_indicator</i>
+                  <span>Gaming oprema</span>
+              </li>
+          </ul>
+      </div>
+  </div>
+  <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white fw-bold">2. Tabela (Redovi)</div>
+      <div class="card-body p-0">
+          <table id="tabela-proizvoda" class="table table-hover mb-0">
+              <thead class="table-light">
+                  <tr>
+                      <th width="50">#</th>
+                      <th>Šifra</th>
+                      <th>Naziv varijacije</th>
+                      <th width="100" class="text-end">Cena</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr data-id="501">
+                      <td><i class="handle material-icons-outlined">menu</i></td>
+                      <td>880-RED-XL</td>
+                      <td>Majica Pamuk - Crvena (XL)</td>
+                      <td class="text-end">1.200 RSD</td>
+                  </tr>
+                  <tr data-id="502">
+                      <td><i class="handle material-icons-outlined">menu</i></td>
+                      <td>880-BLU-L</td>
+                      <td>Majica Pamuk - Plava (L)</td>
+                      <td class="text-end">1.100 RSD</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+  <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white fw-bold">3. Dual Column (Prebacivanje)</div>
+      <div class="card-body">
+          <div class="row g-3">
+              <!-- LEVA KOLONA -->
+              <div class="col-6">
+                  <p class="small fw-bold text-danger">Nedostupno</p>
+                  <div id="izvor-zona" class="p-2 border rounded bg-light" style="min-height: 150px;">
+                      <div class="p-2 bg-white border rounded mb-2 os-sortable-item" data-id="p1">Plaćanje karticom</div>
+                      <div class="p-2 bg-white border rounded mb-2 os-sortable-item" data-id="p2">PayPal integracija</div>
+                  </div>
+              </div>
+              <!-- DESNA KOLONA -->
+              <div class="col-6">
+                  <p class="small fw-bold text-success">Aktivirano</p>
+                  <div id="cilj-zona" class="p-2 border rounded bg-light" style="min-height: 150px;">
+                      <div class="p-2 bg-white border rounded mb-2 os-sortable-item" data-id="p3">Gotovina / Pouzeće</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white fw-bold">7. OPENSHOP GALLERY ENGINE v4.0 UPUSTVO </div>
+      <div class="card-body">
+
+          <!-- 1. SISTEMSKI ZAHTEVI I INSTALACIJA -->
+          <h6 class="fw-bold text-dark mb-2"><i class="os-icon os-icon-settings"></i> 1. Tehnički preduslovi i zavisnosti (Dependencies)</h6>
+          <p class="text-muted mb-3" style="font-size: 0.85rem;">
+              Za ispravan rad <strong>OpenShop Gallery Engine-a</strong>, na stranici je obavezno uključiti sledeće skripte pre same inicijalizacije galerije:
+          </p>
+          <div class="bg-light p-3 rounded border mb-4" style="font-size: 0.85rem;">
+              <ul class="list-unstyled mb-0 spec-list">
+                  <li class="mb-2">
+                      <code><i class="os-icon os-icon-code text-primary"></i> OS.js Framework (Core)</code> —
+                      Glavni pokretač sistema (izložen kao globalni <code>window.OS</code> ili <code>OpenShop</code>). Zadužen je za asinhrono slanje slika na backend preko naprednih asinhronih metoda (<code>OS.post</code> i <code>OS.postJSON</code>), kao i za delegiranje klikova na kantu i kadriranje pomoću <code>OS(selector).on()</code> sistema.
+                  </li>
+                  <li class="mb-2">
+                      <code><i class="os-icon os-icon-arrows text-success"></i> Pitagorin Sortable Engine</code> —
+                      Dodatak koji se direktno proširuje kroz prototip frameworka i omogućava da pozivom funkcije <code>OS('.hex-grid').Sortable()</code> kontejner dobije <em>Drag & Drop</em> funkcionalnost za promenu mesta slika. Engine automatski detektuje izmenu grida i otključava (omogućava) dugme "Rasporedi" na interfejsu.
+                  </li>
+                  <li class="mb-0">
+                      <code><i class="os-icon os-icon-layers text-warning"></i> Inicijalizacija modula:</code>
+                      <pre class="bg-white p-2 rounded border mt-2 mb-0" style="font-size: 0.75rem; color: #1e293b; font-family: monospace;">
+  // Pokretanje galerije nakon što je DOM potpuno učitan
+  new OSProductGallery({
+      productId: window.pid, // ID proizvoda
+      valueId: window.sid,   // ID atributa/vrednosti
+      ajaxUrl: 'api/gallery_actions.php', // Ruta za upload, krop i brisanje
+      orderUrl: 'api/gallery_order.php',   // Ruta za čuvanje redosleda
+      imageContainer: '.hex-grid'           // Selektor omotača slika
+  });</pre>
+                  </li>
+              </ul>
+          </div>
+
+          <!-- 2. KORISNIČKO UPUTSTVO -->
+          <h6 class="fw-bold text-primary mb-3"><i class="os-icon os-icon-help"></i> 2. Korisničko uputstvo za upravljanje medijima</h6>
+          <ul class="list-group list-group-flush mb-4" style="font-size: 0.9rem;">
+              <li class="list-group-item px-0">
+                  <strong><i class="os-icon os-icon-upload text-warning me-2"></i> Dodavanje slika:</strong>
+                  Klikom na dugme "Odabir slika" birate fajlove sa računara. Sistem pokreće asinhroni <em>Sequential Upload</em> koji obrađuje sliku po sliku. To obezbeđuje maksimalnu stabilnost i sprečava pucanje sesije, dok <code>OS.notify</code> u realnom vremenu rendersuje progress bar za svaki upload.
+              </li>
+              <li class="list-group-item px-0">
+                  <strong><i class="os-icon os-icon-arrows text-secondary me-2"></i> Promena redosleda (Ordering):</strong>
+                  Uhvatite stavku preko ikonice sa strelicama u gornjem levom uglu i prevucite je na novu poziciju unutar mreže. Nakon premeštanja, dugme <strong>"Rasporedi"</strong> postaje aktivno. Klikom na njega šalje se indeksirani raspored pozicija u bazu podataka.
+              </li>
+              <li class="list-group-item px-0">
+                  <strong><i class="os-custom-crop text-secondary me-2"></i> Kadriranje (High-Res Crop):</strong>
+                  Klikom na ikonicu makaza otvara se modal. Selektor se na osnovu najnovije optimizacije uvek otvara preko **celog ekrana (od ivice do ivice originala)**, omogućavajući vam da odmah precizno odaberete kadar bez zaostalih starih pozicija.
+              </li>
+              <li class="list-group-item px-0">
+                  <strong><i class="os-icon os-icon-trash text-danger me-2"></i> Brisanje slika:</strong>
+                  Klikom na crvenu kantu pokreće se provera kroz <code>OS.notify.confirm2</code>. Potvrdom akcije element se uklanja iz HTML-a, a fajl briše sa servera.
+              </li>
+          </ul>
+
+          <!-- 3. TEHNIČKA SPECIFIKACIJA I JSON STRUCTURA -->
+          <h6 class="fw-bold text-success mb-2"><i class="os-icon os-icon-code"></i> 3. Tehnička specifikacija i JSON struktura</h6>
+          <p class="text-muted mb-3" style="font-size: 0.85rem;">
+              Podaci unutar atributa <code>data-json</code> na svakoj stavci grida su potpuno očišćeni i optimizovani. Izbačen je parametar istorije kadriranja, pa struktura prenosi isključivo sirove podatke o generisanim rezolucijama i veličinama:
+          </p>
+
+          <!-- PRIMER REALNOG KODA IZ GALERIJE -->
+          <div class="bg-light p-3 rounded border mb-3" style="font-family: monospace; font-size: 0.8rem; overflow-x: auto;">
+  {
+    "original": {
+      "path": "1784569325-3-slider.webp",
+      "width": 570,
+      "height": 680,
+      "size": "3.9 KB"
+    },
+    "large": {
+      "path": "1784569325-3-slider.webp",
+      "width": 570,
+      "height": 680,
+      "size": "3.9 KB"
+    }
+  }
+          </div>
+
+          <!-- 4. STRUKTURA PAYLOAD-A ZA BACKEND -->
+          <h6 class="fw-bold text-dark mb-2" style="font-size: 0.9rem;"><i class="os-icon os-icon-save"></i> 4. Payload za čuvanje redosleda (Ordering)</h6>
+          <p class="text-muted mb-2" style="font-size: 0.85rem;">
+              Klikom na dugme "Rasporedi" (funkcija <code>saveSortOrder</code>), JavaScript sakuplja sve aktivne ID-jeve iz grida i šalje ih kao čist ravan objekat koji PHP preko standardne <code>application/x-www-form-urlencoded</code> strukture direktno pretvara u asocijativni niz:
+          </p>
+          <div class="bg-light p-3 rounded border" style="font-family: monospace; font-size: 0.8rem; overflow-x: auto; color: #b75501;">
+  {
+    "op": "ordering",
+    "data[0][id]": "467",
+    "data[0][order]": "0",
+    "data[1][id]": "1784569325",
+    "data[1][order]": "1"
+  }
+          </div>
+
+          <div class="alert alert-warning mt-3 mb-0 py-2 px-3" style="font-size: 0.85rem;">
+              <strong><i class="os-icon os-icon-info"></i> Zaštitni sloj (Demo mod):</strong> Globalna provera za <code>typeof window.DEMO !== 'undefined'</code> ugrađena je u sve ključne funkcije (Upload, Crop, Ordering, Delete) kako bi sprečila bilo kakvo menjanje fajlova ili baze tokom prezentacije.
+          </div>
+
+      </div>
+  </div>
+
+  <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white fw-bold">7. OPENSHOP GALLERY ENGINE v4.0</div>
+      <div class="card-body">
+          <p class="text-muted small mb-4">
+              Kompletan menadžer medija. Podržava <strong>Sequential Upload</strong> (jedna po jedna slika radi stabilnosti),
+              <strong>Pitagorin Sortable</strong> (grid pomeranje) i <strong>High-Res Crop</strong> (kadriranje originala).
+          </p>
+
+          <div class="upload-img-box">
+              <div class="hex-container">
+                  <div class="hex-grid">
+
+                      <!-- STAVKA GRIDA (Slika) -->
+                      <div class="hex-grid__item border rounded p-2 text-center os-sortable-item" id="sl467" data-id="467" data-json='{"original":{"path":"krema.jpg","width":570,"height":680,"size":"3.9 KB"},"large":{"path":"krema.jpg","width":570,"height":680,"size":"3.9 KB"}}'>
+
+                          <!-- Kontrole iznad slike -->
+                          <div class="img-operations d-flex justify-content-between align-items-center mb-2" id="box467">
+                              <!-- Handle za prevlačenje -->
+                              <a class="portlet-header text-secondary" href="javascript:void(0)">
+                                  <i class="os-icon os-icon-arrows"></i>
+                              </a>
+                              <!-- Akcije (Crop i Brisanje) -->
+                              <div class="d-flex gap-2">
+                                  <a class="crop-img-btn text-secondary crop-trigger" href="javascript:void(0)" data-id="467" title="Kadriraj sliku">
+                                      <i class="os-icon os-custom-crop"></i>
+                                  </a>
+                                  <a class="delete-img-btn text-danger" href="javascript:void(0)" data-id="467" title="Obriši sliku">
+                                      <i class="os-icon os-icon-trash"></i>
+                                  </a>
+                              </div>
+                          </div>
+
+                          <!-- Prikaz slike -->
+                          <div id="sl_img_holder467" class="text-center mb-2">
+                              <img class="image img-fluid rounded" src="krema.jpg" alt="Krema">
+                          </div>
+
+                          <!-- Progress Bar za Sequential Upload -->
+                          <div class="meter animate" style="display: none;">
+                              <span id="bar467" style="width: 0%"></span>
+                          </div>
+                      </div>
+                      <!-- STAVKA GRIDA (Slika) -->
+                      <div class="hex-grid__item border rounded p-2 text-center os-sortable-item" id="sl1784569325" data-id="1784569325" data-json='{"original":{"path":"1784569325-3-slider.webp","width":570,"height":680,"size":"3.9 KB"},"large":{"path":"1784569325-3-slider.webp","width":570,"height":680,"size":"3.9 KB"}}'>
+                          <!-- Kontrole iznad slike -->
+                          <div class="img-operations d-flex justify-content-between align-items-center mb-2" id="box1784569325">
+                              <!-- Handle za prevlačenje -->
+                              <a class="portlet-header text-secondary" href="javascript:void(0)">
+                                  <i class="os-icon os-icon-arrows"></i>
+                              </a>
+                              <!-- Akcije (Crop i Brisanje) -->
+                              <div class="d-flex gap-2">
+                                  <a class="crop-img-btn text-secondary crop-trigger" href="javascript:void(0)" data-id="1784569325" title="Kadriraj sliku">
+                                      <i class="os-icon os-custom-crop"></i>
+                                  </a>
+                                  <a class="delete-img-btn text-danger" href="javascript:void(0)" data-id="1784569325" title="Obriši sliku">
+                                      <i class="os-icon os-icon-trash"></i>
+                                  </a>
+                              </div>
+                          </div>
+
+                          <!-- Prikaz slike -->
+                          <div id="sl_img_holder1784569325" class="text-center mb-2">
+                              <img class="image img-fluid rounded" src="1784569325-3-slider.webp" alt="Slider slika">
+                          </div>
+
+                          <!-- Progress Bar za Sequential Upload -->
+                          <div class="meter animate" style="display: none;">
+                              <span id="bar1784569325" style="width: 0%"></span>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+
+              <!-- Skriveni input za upload fajlova -->
+              <input type="file" id="upl" name="upl[]" accept="image/*" multiple style="display:none" />
+          </div>
+          <div class="row mt-3">
+              <div class="col-md-3">
+                  <!-- Dugme za odabir slika sa čistom CSS ikonom -->
+                  <button type="button" id="btnSelectImages" class="uploadmulti btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                  <i class="os-icon-upload  flex-shrink-0"></i>
+                      Odabir slika
+                  </button>
+              </div>
+              <div class="col-md-3">
+                  <!-- Dugme za raspored sa čistom CSS ikonom -->
+                  <button type="button" id="btnSaveOrder" disabled="disabled" class="orderingmulti btn btn-secondary w-100 d-flex align-items-center justify-content-center gap-2">
+                      <i class="os-icon-save  flex-shrink-0"></i>
+                      Rasporedi
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="card shadow-sm border-0 mb-5">
+      <div class="card-header py-3 text-secondary bg-white border-bottom-0">
+          <i class="fa-solid fa-bell me-2 text-info"></i>JS: OSSlider Engine (v4.7 Final) UPUSTVO
+      </div>
+      <div class="card-body pt-0">
+
+          <!-- 1. INSTALACIJA I ARHITEKTURA -->
+          <h6 class="fw-bold text-dark mb-2"><i class="os-icon os-icon-settings"></i> 1. Preduslovi i drajveri</h6>
+          <p class="text-muted mb-3" style="font-size: 0.85rem;">
+              <strong>OSSlider Engine</strong> je samostalan, ultra-brzi plugin razvijen na bazi nativnog <code>OS.js</code> frameworka. Za animaciju progresa koristi sistemski <code>requestAnimationFrame</code> koji garantuje glatkih 60fps bez opterećenja procesora.
+          </p>
+          <div class="bg-light p-3 rounded border mb-4" style="font-size: 0.85rem;">
+              <ul class="list-unstyled mb-0 spec-list">
+                  <li class="mb-2">
+                      <code><i class="os-icon os-icon-code text-primary"></i> OS.js Framework (Core)</code> —
+                      Neophodan za manipulaciju klasama (<code>addClass</code>, <code>removeClass</code>), pretragu DOM-a (<code>find</code>, <code>get</code>) i emitovanje custom događaja.
+                  </li>
+                  <li class="mb-2">
+                      <code><i class="os-icon os-icon-layers text-success"></i> Izlaganje kroz Prototip (Bridge)</code> —
+                      Plugin se automatski kači na framework, što omogućava brzu inicijalizaciju nad bilo kojim kontejnerom na stranici.
+                  </li>
+                  <li class="mb-0">
+                      <code><i class="os-icon os-icon-refresh text-warning"></i> Inicijalizacija u kodu:</code>
+                      <pre class="bg-white p-2 rounded border mt-2 mb-0" style="font-size: 0.75rem; color: #1e293b; font-family: monospace;">
+  // Aktivacija slidera sa predefinisanim parametrima
+  OS('#mainSlider').Slider({
+      loop: true,
+      delay: 6000,          // Vreme trajanja slajda u ms
+      swipeThreshold: 70     // Osetljivost prevlačenja (pikseli)
+  });</pre>
+                  </li>
+              </ul>
+          </div>
+
+          <!-- 2. STRUKTURA HTML ŠABLONA -->
+          <h6 class="fw-bold text-primary mb-2"><i class="os-icon os-icon-layers"></i> 2. HTML Arhitektura elemenata</h6>
+          <p class="text-muted mb-3" style="font-size: 0.85rem;">
+              Da bi animacije funkcionisale bez seckanja, HTML mora strogo pratiti definisane klase. Svaki slajd u atributu <code>data-os-scene</code> nosi naziv specifičnog efekta:
+          </p>
+          <div class="bg-light p-3 rounded border mb-4" style="font-size: 0.8rem; font-family: monospace; max-height: 250px; overflow-y: auto;">
+  &lt;div class="slider-container" id="mainSlider"&gt;
+      &lt;!-- Linija napretka --&gt;
+      &lt;div class="os-slider-progress"&gt;&lt;/div&gt;
+
+      &lt;div class="slider-wrapper"&gt;
+          &lt;!-- Aktivni slajd sa scenom --&gt;
+          &lt;div class="os-slide-div active" data-os-scene="landaraStyle"&gt;
+              &lt;img src="putanja.jpg"&gt;
+              &lt;div class="slide-overlay"&gt;
+                  &lt;div class="content-box"&gt;
+                      &lt;h1 class="title"&gt;AKCIJE&lt;/h1&gt;
+                      &lt;p class="desc"&gt;Opis...&lt;/p&gt;
+                      &lt;div class="action-group"&gt;
+                          &lt;button class="os-prev"&gt;❮&lt;/button&gt;
+                          &lt;button class="os-next"&gt;❯&lt;/button&gt;
+                      &lt;/div&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+          &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;!-- Automatski generisane tačkice --&gt;
+      &lt;div class="slider-dots"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+          </div>
+
+          <!-- 3. DOSTUPNE SCENE I TRANZICIJE -->
+          <h6 class="fw-bold text-success mb-3"><i class="os-icon os-icon-help"></i> 3. Registrovane scene i efekti (window.OSSliderScenes)</h6>
+          <div class="row row-cols-1 row-cols-md-2 g-3 mb-4" style="font-size: 0.85rem;">
+              <div class="col">
+                  <div class="p-3 border rounded bg-white h-100">
+                      <strong class="text-primary"><i class="os-icon os-icon-code"></i> landaraStyle</strong>
+                      <p class="text-muted mb-0 small mt-1">Stagger ulaz elemenata unutar slajda. Naslov, opis i dugmići se pojavljuju jedan za drugim sa kaskadnim kašnjenjem od 300ms do 900ms uz translateY efekat.</p>
+                  </div>
+              </div>
+              <div class="col">
+                  <div class="p-3 border rounded bg-white h-100">
+                      <strong class="text-primary"><i class="os-icon os-icon-code"></i> zoomFocus (zoom)</strong>
+                      <p class="text-muted mb-0 small mt-1">Slika u pozadini kreće iz uvećanja (scale 1.15) i lagano se smiruje tokom 6 sekundi, dok se tekstualni boks nežno širi iz centra.</p>
+                  </div>
+              </div>
+              <div class="col">
+                  <div class="p-3 border rounded bg-white h-100">
+                      <strong class="text-success"><i class="os-icon os-icon-code"></i> kenBurns</strong>
+                      <p class="text-muted mb-0 small mt-1">Kinematografsko linearno klizanje i skaliranje pozadinske slike (scale 1.2 i translateX) koje traje tokom celog prikaza slajda.</p>
+                  </div>
+              </div>
+              <div class="col">
+                  <div class="p-3 border rounded bg-white h-100">
+                      <strong class="text-danger"><i class="os-icon os-icon-code"></i> tilt & flash</strong>
+                      <p class="text-muted mb-0 small mt-1">Tranzicije koje modifikuju ceo kontejner slajda. <code>tilt</code> krivi ekran u 3D prostoru po X osi, dok <code>flash</code> pravi ekspozicijski beli bljesak pri smeni.</p>
+                  </div>
+              </div>
+          </div>
+
+          <!-- 4. GESTIKULACIJA I DOGAĐAJI -->
+          <h6 class="fw-bold text-dark mb-2"><i class="os-icon os-icon-save"></i> 4. Interakcija i Event API</h6>
+          <p class="text-muted mb-2" style="font-size: 0.85rem;">
+              Engine podržava <strong>Desktop Mouse Drag</strong> (prevlačenje mišem) i <strong>Mobilne Touch Gestove</strong> (swipe prstom). Slušaoci na window nivou se aktiviraju isključivo u momentu klika/dodira i odmah čiste iz memorije nakon puštanja.
+          </p>
+          <p class="text-muted mb-3" style="font-size: 0.85rem;">
+              Prilikom svake promene slajda, sistem kroz vaš <code>OS.js</code> sistem emituje globalni custom događaj koji možete slušati bilo gde u aplikaciji:
+          </p>
+          <div class="bg-light p-3 rounded border" style="font-family: monospace; font-size: 0.8rem; color: #b75501;">
+  OS('#mainSlider').on('osSlider:changed', function(e) {
+      console.log("Aktivni slajd indeks:", e.detail.index);
+      console.log("Ukupno slajdova:", e.detail.total);
+      console.log("Trenutna scena:", e.detail.scene);
+  });
+          </div>
+
+          <div class="alert alert-info mt-3 mb-0 py-2 px-3" style="font-size: 0.85rem;">
+              <strong><i class="os-icon os-icon-info"></i> Pametna pauza:</strong> Autoplay i progres linija se automatski pauziraju kada korisnik drži slajd mišem (mousedown) ili pređe kursorom preko slidera (mouseenter), a nastavljaju rad odmah po otpuštanju ili odlasku kursora.
+          </div>
+
+      </div>
+  </div>
+  <div class="card shadow-sm border-0 mb-5">
+      <div class="card-header py-3 text-secondary bg-white border-bottom-0">
+          <i class="fa-solid fa-bell me-2 text-info"></i>JS: OSSlider Engine (v4.7 )
+      </div>
+      <div class="card-body pt-0">
+        <div class="card-body">
+  <!-- Kontejner za formu -->
+  <div class="slider-container" id="mainSlider">
+      <!-- Linija napretka na vrhu -->
+      <div class="os-slider-progress"></div>
+
+      <div class="slider-wrapper">
+          <!-- SLAJD 1: Landara Style -->
+          <div class="os-slide-div active"  data-os-scene="landaraStyle">
+              <picture>
+                  <source srcset="1784569325-3-slider.webp" type="image/webp">
+                  <img src="1784569325-3-slider.webp" alt="Slide 1">
+              </picture>
+              <div class="slide-overlay">
+                  <div class="content-box">
+                      <h1 class="title">AKCIJE</h1>
+                      <p class="desc">Stranica sa Akcijskim ponudama</p>
+                      <p class="sub-desc">Po aktuelnim cenama.</p>
+
+                      <div class="action-group">
+                          <a href="#" class="os-btn-main">SAZNAJ VIŠE</a>
+                          <div class="nav-arrows">
+                              <button class="os-prev">❮</button>
+                              <button class="os-next">❯</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- SLAJD 2: Novi stil -->
+          <div class="os-slide-div" data-os-scene="zoom">
+              <img src="1784203549-2-slider.webp" alt="Slide 2">
+              <div class="slide-overlay">
+                  <div class="content-box">
+                      <h1 class="title">NOVA ERA</h1>
+                      <p class="desc">OpenShop Framework 2026</p>
+                      <p class="sub-desc">Brže. Bolje. Pametnije.</p>
+
+                      <div class="action-group">
+                          <a href="#" class="os-btn-main">ISTRAŽI MODUL</a>
+                          <div class="nav-arrows">
+                              <button class="os-prev">❮</button>
+                              <button class="os-next">❯</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Tačkice (Indikatori) -->
+      <div class="slider-dots"></div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white fw-bold">
+        <i class="os-icon os-icon-settings text-primary me-2"></i>7.c OPENSHOP VALIDATOR v1.2.0 - HTML DOKUMENTACIJA
+    </div>
+    <div class="card-body">
+
+        <!-- UVOD I PRAVILO BR. 1 -->
+        <div class="alert alert-info py-2 px-3 mb-4" style="font-size: 0.85rem;">
+            <strong><i class="os-icon os-icon-info"></i> Zlatno pravilo validacije:</strong>
+            Svako polje unutar forme koje želite da validirate <strong>mora imati definisan jedinstveni <code>name</code> atribut</strong>. Na osnovu tog imena se mapiraju pravila u JavaScript pozivu.
+        </div>
+
+        <!-- METOD A: BOOTSTRAP -->
+        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;">A) Bootstrap 5/6 Standardni Način</h6>
+        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+            Koristi se kod klasičnih tekstualnih inputa i tekstualnih oblasti. Element za ispis greške mora biti postavljen neposredno nakon inputa sa klasom <code>invalid-feedback</code>:
+        </p>
+        <div class="bg-light p-3 rounded border mb-4" style="font-family: monospace; font-size: 0.8rem; overflow-x: auto; color: #1e293b;">
+&lt;div class="mb-3"&gt;
+    &lt;label class="form-label"&gt;Naziv proizvoda&lt;/label&gt;
+    &lt;input type="text" name="product_name" class="form-control" placeholder="npr. Smart Watch Pro"&gt;
+    &lt;div class="invalid-feedback"&gt;&lt;/div&gt; &lt;!-- Mesto gde plugin upisuje tekst greške --&gt;
+&lt;/div&gt;
+        </div>
+
+        <!-- METOD B: OPENSHOP UNIVERZALNI -->
+        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;">B) OpenShop Univerzalni Način (Preko <code>data-for</code> atributa)</h6>
+        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+            Najsigurniji metod za opšta tekstualna polja i elemente specifičnih datuma (poput rođendana). Element za grešku može biti postavljen bilo gde unutar iste grupe, a povezuje se sa poljem preko atributa <code>data-for=""</code>:
+        </p>
+        <div class="bg-light p-3 rounded border mb-4" style="font-family: monospace; font-size: 0.8rem; overflow-x: auto; color: #1e293b;">
+&lt;div class="form-group mb-3"&gt;
+    &lt;label&gt;Datum rođenja ili opšti datum&lt;/label&gt;
+    &lt;input type="text" name="birthday" class="form-control"&gt;
+    &lt;span class="error-poruka" data-for="birthday"&gt;&lt;/span&gt; &lt;!-- Povezano direktno sa inputom --&gt;
+&lt;/div&gt;
+        </div>
+
+        <!-- METOD C: CUSTOM KOMPONENTE -->
+        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;">C) OpenShop Custom Komponente (Selects &amp; TagsInput)</h6>
+        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+            Primenjuje se na napredne UI Kit komponente (Kategorije, Višestruki Tagovi, Boje). Pošto su nativni elementi skriveni, plugin automatski boji crvenu ivicu (<code>border-color</code>) na prvoj pratećoj custom komponenti, a poruka se vezuje ispod njenog kontejnera:
+        </p>
+        <div class="bg-light p-3 rounded border mb-4" style="font-family: monospace; font-size: 0.8rem; overflow-x: auto; color: #1e293b;">
+&lt;!-- Primer za Višestruke Tagove (Multiple Select / TagsInput) --&gt;
+&lt;div class="mb-3"&gt;
+    &lt;label&gt;Tagovi (Multiple)&lt;/label&gt;
+    &lt;select name="tags_multiple" multiple class="form-control d-none"&gt;
+        &lt;option value="novo"&gt;Novo&lt;/option&gt;
+        &lt;option value="akcija"&gt;Akcija&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;!-- Tvoj Custom UI Kit kontejner (.select-container) se renderuje ovde preko JS-a --&gt;
+    &lt;span class="error-poruka" data-for="tags_multiple"&gt;&lt;/span&gt;
+&lt;/div&gt;
+        </div>
+
+        <!-- AUTOMATSKA CSS SVOJSTVA -->
+        <h6 class="fw-bold text-success mb-2" style="font-size: 0.9rem;"><i class="os-icon os-icon-code"></i> Automatska CSS mehanika ugrađenih stilova</h6>
+        <p class="text-muted mb-3" style="font-size: 0.85rem;">
+            Zahvaljujući ugrađenoj metodi <code>injectStyles()</code>, čim se inicijalizuje validacija, plugin u zaglavlje stranice ubacuje sledeća CSS pravila za automatizaciju prikaza:
+        </p>
+        <ul class="list-group list-group-flush mb-0" style="font-size: 0.85rem;">
+            <li class="list-group-item px-0 bg-transparent py-2">
+                <code class="text-danger">.is-invalid</code> —
+                Automatski dobija crvenu ivicu i ugrađenu SVG ikonicu sa znakom uzvika na desnoj strani nativnog polja.
+            </li>
+            <li class="list-group-item px-0 bg-transparent py-2">
+                <code class="text-danger">.is-invalid + .form-control.d-flex.flex-wrap</code> —
+                Daje crvenu ivicu i blagi crveni sjaj (box-shadow) vašim d-flex omotačima za Tag Inpute.
+            </li>
+            <li class="list-group-item px-0 bg-transparent py-2">
+                <code class="text-danger">.is-invalid ~ .error-poruka</code> —
+                Automatski prebacuje element za poruku sa <code>display: none</code> na <code>display: block</code> onog trenutka kada polje postane nevalidno.
+            </li>
+        </ul>
+
+    </div>
+</div>
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white fw-bold">
+        <i class="os-icon os-icon-settings text-primary me-2"></i>7.d OPENSHOP GRID ENGINE v4.8 - ALL-IN-ONE SPECIFIKACIJA
+    </div>
+    <div class="card-body">
+
+        <!-- 1. KLIJENTSKA IMPLEMENTACIJA -->
+        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;"><i class="os-icon os-icon-layers text-primary"></i> 1. Klijentska HTML struktura (Admin Panel)</h6>
+        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+            Za ispravan rad filtriranja, polje za pretragu mora biti povezano sa kontejnerom u koji PHP dinamički vraća osvežen HTML šablon tabele (tzv. <em>Partial Render</em>). Elementi za paginaciju i sortiranje moraju nositi odgovarajuće <code>data</code> atribute:
+        </p>
+        <div class="bg-light p-3 rounded border mb-4" style="font-family: monospace; font-size: 0.8rem; max-height: 250px; overflow-y: auto; color: #1e293b;">
+&lt;!-- Kontrolni panel iznad tabele --&gt;
+&lt;div class="admin-grid-kontrole mb-3"&gt;
+    &lt;input type="text" id="search-field" placeholder="Pretraži šifru, naziv..." autocomplete="off" class="form-control"&gt;
+
+    &lt;select id="category-select" class="form-select"&gt;
+        &lt;option value=""&gt;Sve kategorije&lt;/option&gt;
+        &lt;option value="1"&gt;Elektronika&lt;/option&gt;
+    &lt;/select&gt;
+&lt;/div&gt;
+
+&lt;!-- Kontejner koji se dinamički osvežava (Zadržava inicijalni backend render) --&gt;
+&lt;div id="table-container"&gt;
+    &lt;table class="table"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;!-- Zaglavlje sa data-sort atributom za asinhrono sortiranje --&gt;
+                &lt;th data-sort="sifra" style="cursor:pointer"&gt;Šifra &lt;i class="os-icon os-icon-arrows"&gt;&lt;/i&gt;&lt;/th&gt;
+                &lt;th data-sort="naziv" style="cursor:pointer"&gt;Naziv&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+            &lt;!-- Podaci iz baze... --&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+
+    &lt;!-- Paginacija sa klasom .os-page-link i data-page atributom --&gt;
+    &lt;div class="pagination"&gt;
+        &lt;a class="os-page-link" data-page="1" href="#"&gt;1&lt;/a&gt;
+        &lt;a class="os-page-link" data-page="2" href="#"&gt;2&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+        </div>
+
+        <!-- 2. INICIJALIZACIJA KODA -->
+        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;"><i class="os-icon os-icon-code text-success"></i> 2. JavaScript Inicijalizacija klase</h6>
+        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+            Pokretanje motora se vrši nad elementom za pretragu. Dodatni filteri (poput selektora kategorije) se prenose asinhrono kroz funkciju <code>extraFilters</code>:
+        </p>
+        <div class="bg-light p-3 rounded border mb-4" style="font-family: monospace; font-size: 0.8rem; overflow-x: auto; color: #1e293b;">
+OS(function() {
+    // Podesi grid na polju za pretragu
+    OS('#search-field').gridFilter({
+        url: 'get_data.php',
+        target: '#table-container', // Kontejner u koji se upisuje HTML iz PHP-a
+        wait: 400,                  // Debounce pauza u milisekundama
+        extraFilters: function() {
+            return {
+                category_id: OS('#category-select').val(),
+                status: OS('#status-select').val()
+            };
+        }
+    });
+
+    // Ako se promeni bilo koji select, okini instant pretragu preko custom eventa
+    OS('#category-select, #status-select').on('change', function() {
+        OS('#search-field').trigger('triggerSearch');
+    });
+});
+        </div>
+
+        <!-- 3. NAPREDNE TEHNIČKE KARAKTERISTIKE -->
+        <h6 class="fw-bold text-success mb-2" style="font-size: 0.9rem;"><i class="os-icon os-icon-settings"></i> 3. Ugrađeni sigurnosni i optimizacioni slojevi</h6>
+        <div class="row row-cols-1 row-cols-md-3 g-3 mb-2" style="font-size: 0.85rem;">
+            <div class="col">
+                <div class="p-3 border rounded bg-white h-100">
+                    <strong class="text-primary"><i class="os-icon os-icon-refresh"></i> AbortController API</strong>
+                    <p class="text-muted mb-0 small mt-1">Ugrađena zaštita od <em>Race Condition</em> anomalija. Ako korisnik brzo kuca, sistem automatski prekida (abortuje) prethodni AJAX zahtev na mreži pre slanja novog, čime se drastično rasterećuje server.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-3 border rounded bg-white h-100">
+                    <strong class="text-success"><i class="os-icon os-icon-code"></i> Event Delegation</strong>
+                    <p class="text-muted mb-0 small mt-1">Slušaoci za klikove na paginaciju (`.os-page-link`) i sortiranje (`th[data-sort]`) su vezani na krovni kontejner. To znači da klikovi rade bez ponovnog vezivanja čak i kada se ceo HTML unutar tabele kompletno zameni novim odgovorom.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-3 border rounded bg-white h-100">
+                    <strong class="text-warning"><i class="os-icon os-icon-layers"></i> Multi-Instance Safe</strong>
+                    <p class="text-muted mb-0 small mt-1">Objekat stanja (`state`) i mrežni drajver su enkapsulirani unutar ciklusa petlje svakog elementa. Na istoj stranici možete imati neograničen broj nezavisnih gridova koji se neće međusobno preklapati.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFO BANER -->
+        <div class="alert alert-warning mt-3 mb-0 py-2 px-3" style="font-size: 0.85rem;">
+            <strong><i class="os-icon os-icon-info"></i> Napomena za bazu podataka:</strong>
+            Da bi pretraga radila maksimalno brzo na velikim tabelama proizvoda, obavezno pokrenite kompozitni indeks u SQL-u:
+            <code>ALTER TABLE proizvodi ADD INDEX idx_pretraga (sifra, naziv(100), barkod);</code>
+        </div>
+
+    </div>
+</div>
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white fw-bold">
+        <i class="os-icon os-icon-settings text-primary me-2"></i>7.d OPENSHOP GRID ENGINE v4.8.0 - TEHNIČKA SPECIFIKACIJA I UPUTSTVO
+    </div>
+    <div class="card-body">
+
+        <!-- 1. KLIJENTSKA HTML STRUKTURA SA REALNIM PRIMEROM -->
+        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;"><i class="os-icon os-icon-layers text-primary"></i> 1. Klijentska HTML Struktura (Admin Panel - Proizvodi)</h6>
+        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+            Da bi parcijalno osvežavanje tabele (<em>Partial Render</em>) radilo bez greške, elementi unutar dinamičkog kontejnera moraju imati strogo definisane <code>data</code> atribute na koje se krovna delegacija događaja kači:
+        </p>
+        <div class="bg-light p-3 rounded border mb-4" style="font-family: monospace; font-size: 0.8rem; max-height: 280px; overflow-y: auto; color: #1e293b;">
+&lt;!-- Kontrolni panel (Filteri) iznad tabele --&gt;
+&lt;div class="admin-grid-kontrole d-flex gap-2 mb-3"&gt;
+    &lt;!-- Glavno polje za kucanje pretrage --&gt;
+    &lt;input type="text" id="search-proizvodi" placeholder="Pretraži šifru, naziv, barkod..." autocomplete="off" class="form-control"&gt;
+
+    &lt;!-- Dodatni filteri (Skupljaju se asinhrono) --&gt;
+    &lt;select id="filter-kategorija" class="form-select"&gt;
+        &lt;option value=""&gt;Sve kategorije&lt;/option&gt;
+        &lt;option value="12"&gt;Kozmetika i kreme&lt;/option&gt;
+        &lt;option value="15"&gt;Odeća i obuća&lt;/option&gt;
+    &lt;/select&gt;
+
+    &lt;!-- Dugme za eksport podataka --&gt;
+    &lt;button type="button" id="btn-eksport-proizvoda" class="btn btn-secondary"&gt;
+        &lt;i class="os-icon os-icon-save"&gt;&lt;/i&gt; Izvoz u CSV
+    &lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- KROVNI KONTEJNER (Meta): OS.ajax dinamički osvežava samo sadržaj unutar ovog DIV-a --&gt;
+&lt;div id="grid-tabela-wrapper"&gt;
+    &lt;table class="table table-hover"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;!-- data-sort definiše kolonu u bazi. Klikom se automatski menja smer ASC/DESC --&gt;
+                &lt;th data-sort="sifra" style="cursor: pointer"&gt;Šifra &lt;i class="os-icon os-icon-arrows"&gt;&lt;/i&gt;&lt;/th&gt;
+                &lt;th data-sort="naziv" style="cursor: pointer"&gt;Naziv artikla&lt;/th&gt;
+                &lt;th data-sort="cena" style="cursor: pointer"&gt;Cena&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+            &lt;tr&gt;
+                &lt;td&gt;467&lt;/td&gt;
+                &lt;td&gt;Krema za lice 50ml&lt;/td&gt;
+                &lt;td&gt;1.250,00 RSD&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+
+    &lt;!-- Paginacija: Linkovi moraju imati klasu .os-page-link i data-page indeks --&gt;
+    &lt;nav&gt;
+        &lt;ul class="pagination"&gt;
+            &lt;li class="page-item"&gt;&lt;a class="os-page-link page-link" data-page="1" href="#"&gt;1&lt;/a&gt;&lt;/li&gt;
+            &lt;li class="page-item"&gt;&lt;a class="os-page-link page-link" data-page="2" href="#"&gt;2&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+&lt;/div&gt;
+        </div>
+
+        <!-- 2. JS INICIJALIZACIJA -->
+        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;"><i class="os-icon os-icon-code text-success"></i> 2. JavaScript Inicijalizacija i Povezivanje Događaja</h6>
+        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+            Motor se pokreće direktno nad tekstualnim poljem. Promene na pratećim filterima (select boxovima) odmah okinu sistemski custom event <code>triggerSearch</code> koji resetuje paginaciju na stranu 1 i vuče sveže podatke:
+        </p>
+        <div class="bg-light p-3 rounded border mb-4" style="font-family: monospace; font-size: 0.8rem; overflow-x: auto; color: #1e293b;">
+OS(function() {
+    // 🚀 Pokretanje motora na input polju za pretragu artikala
+    OS('#search-proizvodi').gridFilter({
+        url: '/admin/proizvodi/grid-data',     // Backend API endpoint
+        target: '#grid-tabela-wrapper',        // Kontejner koji osvežavamo
+        exportBtn: '#btn-eksport-proizvoda',    // CSS selektor dugmeta za izvoz
+        exportUrl: '/admin/proizvodi/export-csv', // Backend URL za generisanje CSV-a
+        wait: 300,                              // Debounce pauza (kucanje bez zagušenja baze)
+        extraFilters: function() {
+            // Skupljanje dodatnih stanja sa stranice u momentu slanja zahteva
+            return {
+                kategorija_id: OS('#filter-kategorija').val()
+            };
+        },
+        beforeSend: function() {
+            // Vizuelni feedback pre slanja AJAX-a (Stranica 12)
+            OS('#grid-tabela-wrapper').css('opacity', '0.4');
+        },
+        success: function(response) {
+            // Vraćanje punog opasiteta nakon uspešnog renderovanja (Stranica 3)
+            OS('#grid-tabela-wrapper').css('opacity', '1');
+        }
+    });
+
+    // Ako administrator promeni kategoriju, odmah osvežavamo tabelu bez čekanja tajmera
+    OS('#filter-kategorija').on('change', function() {
+        OS('#search-proizvodi').trigger('triggerSearch');
+    });
+});
+        </div>
+
+        <!-- 3. REALAN PAYLOAD (ŠTA IDE NA PHP) -->
+        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;"><i class="os-icon os-icon-save text-warning"></i> 3. Primer strukture podataka na mreži (HTTP Request Payload)</h6>
+        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+            Zahvaljujući ugrađenoj metodi <code>OpenShop.param</code>, plugin pretvara stanje grida u čist Query String format i prosleđuje ga backendu:
+        </p>
+        <div class="bg-light p-3 rounded border mb-4" style="font-family: monospace; font-size: 0.8rem; overflow-x: auto; color: #b75501;">
+{
+  "search": "Krema",       // Uneti tekst iz #search-proizvodi
+  "page": 2,               // Trenutna strana izvučena iz .os-page-link
+  "sort_by": "cena",       // Aktivna kolona izvučena iz th[data-sort]
+  "sort_dir": "ASC",       // Smer sortiranja (Inverzija na klik: ASC / DESC)
+  "kategorija_id": "12"    // Podatak pokupljen iz extraFilters() callback-a
+}
+        </div>
+
+        <!-- 4. SERVERSKA IMPLEMENTACIJA I SQL OPTIMIZACIJA -->
+        <h6 class="fw-bold text-success mb-2" style="font-size: 0.9rem;"><i class="os-icon os-icon-settings"></i> 4. Serverska optimizacija i PDO upiti (PHP Backend)</h6>
+        <p class="text-muted mb-3" style="font-size: 0.85rem;">
+            Da bi pretraga radila munjevito brzo na bazama sa desetinama hiljada artikala, baza <strong>mora posedovati kompozitni indeks</strong> na kolonama koje se pretražuju, a PHP kontroler mora striktno ograničiti broj rezultata:
+        </p>
+        <div class="bg-dark text-white p-3 rounded border mb-0" style="font-family: monospace; font-size: 0.75rem; max-height: 250px; overflow-y: auto;">
+<span style="color: #6a737d;">// SQL Indeks za bazu podataka (Pokrenuti preko konzole ili phpMyAdmin-a):</span>
+<span style="color: #f9758b;">ALTER TABLE</span> proizvodi <span style="color: #f9758b;">ADD INDEX</span> idx_pretraga (sifra, naziv(<span style="color: #79b8ff;">100</span>), barkod);
+
+<span style="color: #6a737d;">// PHP Kontroler (/admin/proizvodi/grid-data):</span>
+&lt;?php
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$kategorijaId = isset($_GET['kategorija_id']) ? (int)$_GET['kategorija_id'] : 0;
+$sortBy = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'id';
+$sortDir = (isset($_GET['sort_dir']) &amp;&amp; $_GET['sort_dir'] === 'ASC') ? 'ASC' : 'DESC';
+
+// Bezbedno mapiranje kolona radi sprečavanja SQL Injection-a kroz SORT parametar
+$dozvoljeneKolone = ['id', 'sifra', 'naziv', 'cena'];
+if (!in_array($sortBy, $dozvoljeneKolone)) { $sortBy = 'id'; }
+
+$query = "SELECT * FROM proizvodi WHERE status = 1";
+$params = [];
+
+if (!empty($search)) {
+    // Desni džoker 'reč%' omogućava maksimalno iskorišćenje postavljenog B-Tree indeksa
+    $query .= " AND (naziv LIKE ? OR sifra LIKE ? OR barkod = ?)";
+    $params[] = "%$search%";
+    $params[] = "$search%";
+    $params[] = $search;
+}
+
+if ($kategorijaId > 0) {
+    $query .= " AND kategorija_id = ?";
+    $params[] = $kategorijaId;
+}
+
+// Spajanje bezbednog sortiranja i paginacije
+$query .= " ORDER BY {$sortBy} {$sortDir} LIMIT 50";
+
+$proizvodi = $db-&gt;execute($query, $params);
+// Renderovanje parcijalnog HTML-a...
+?&gt;
+        </div>
+
+    </div>
+</div>
+
+</div>
             <!-- DESNA KOLONA: Kontrolna Tabla za Obaveštenja -->
             <div class="col-lg-4">
               <div class="card bg-dark text-white">
@@ -569,7 +1495,7 @@
                       <i class="fa-solid fa-bolt me-2 text-warning"></i> Notify Engine API
                   </div>
                   <div class="card-body">
-                      <p class="small text-secondary mb-4">Ovaj modul upravlja svim sistemskim porukama bez pisanja dodatnog HTML koda (Zero-HTML arhitektura).</p>
+                      <p class="small text-secondary mb-4">Ovaj modul upravlja svim sistemskim porukama bez pisanja dodatnog HTML-a.</p>
 
                       <div class="d-grid gap-2 mb-4">
                           <button class="btn btn-sm btn-outline-success" onclick="OS.notify.success('Podaci su uspešno sinhronizovani!')">Success Toast</button>
@@ -586,10 +1512,9 @@
                   </div>
               </div>
             </div>
+
         </div>
     </div>
-
-
 
 
 
@@ -599,27 +1524,201 @@
   <!-- Tvoji integrisani OpenShop plugini -->
   <script src="assets/js/select.js?v=kl"></script>
   <script src="assets/js/image-preview.js?v=25"></script>
-  <script src="assets/js/openshop-notify.js?v=332"></script>
+  <script src="assets/js/openshop-notify.js?v=334"></script>
   <script src="assets/js/openshop-sortable.js?v=332"></script>
   <script src="assets/js/openshop-tagsinput.js?v=332"></script>
   <script src="assets/js/openshop-validator.js?v=332"></script>
-  <script src="assets/js/openshop-datepicker.js?v=332"></script>
+  <script src="assets/js/openshop-datepicker.js?v=30k212"></script>
     <script src="assets/js/openshop-color-picker.js?v3332"></script>
-  <script>
+    <script src="assets/js/openshop-grid-engine.js?v3332"></script>
+      <script src="assets/js/os.datepicker.en.js?v3332"></script>
+        <script src="assets/js/os.datepicker.sr.js?v3332"></script>
+          <script src="assets/js/openshop.range.js?v33ddf32"></script>
+      <script src="assets/js/openshop.slider.js?12"></script>
+          <script src="assets/js/openshop-sortable.js?1ve5rtr"></script>
+  <script src="assets/js/openshop-galery.js?155"></script>
+  <style type="text/css">
 
+  </style>
+  <script>
+  window.DEMO=true ;
+  window.base_path = ''; // Ili npr. '/novshop/'
+window.ADMIN_PAGE = 'admin';
+window.VERSION = '4.0';
   window._P = function(key) {
       var prevodi = { 'Select': 'Izaberi', 'Upload': 'Prebaci' };
       return prevodi[key] || key;
   };
 
+
+ window.OSSliderScenes = {
+    // --- SCENE (Ulaz elemenata unutar aktivnog slajda) ---
+
+    landaraStyle: function(slide) {
+        const els = [slide.find('.title'), slide.find('.desc'), slide.find('.sub-desc'), slide.find('.action-group')];
+        els.forEach(el => el.css({ opacity: 0, transform: 'translateY(25px)', transition: '0s' }));
+
+        setTimeout(() => els[0].css({ opacity: 1, transform: 'translateY(0)', transition: '0.8s ease-out' }), 300);
+        setTimeout(() => els[1].css({ opacity: 1, transform: 'translateY(0)', transition: '0.8s ease-out' }), 500);
+        setTimeout(() => els[2].css({ opacity: 1, transform: 'translateY(0)', transition: '0.8s ease-out' }), 700);
+        setTimeout(() => els[3].css({ opacity: 1, transform: 'translateY(0)', transition: '0.6s cubic-bezier(0.34, 1.56, 0.64, 1)' }), 900);
+    },
+
+    zoomFocus: function(slide) {
+        const content = slide.find('.content-box');
+        const img = slide.find('img');
+        img.css({ transform: 'scale(1.15)', transition: '0s' });
+        content.css({ opacity: 0, transform: 'scale(0.9)', transition: '0s' });
+
+        setTimeout(() => img.css({ transform: 'scale(1)', transition: '6s ease-out' }), 50);
+        setTimeout(() => content.css({ opacity: 1, transform: 'scale(1)', transition: '1s ease-out' }), 400);
+    },
+
+    // --- TRANZICIJE (Efekti na celom slajdu u pokretu) ---
+    // state: 'kreni' (odlazak) ili 'vrati' (dolazak)
+
+    blur: (box, state) => {
+        box.style.transition = 'filter 0.5s ease, opacity 0.5s ease';
+        box.style.filter = state === 'kreni' ? 'blur(10px)' : 'blur(0px)';
+        box.style.opacity = state === 'kreni' ? '0.3' : '1';
+    },
+
+    zoom: function(slide) {
+      const content = slide.find('.content-box');
+      const img = slide.find('img');
+
+      // Reset
+      img.css({ transform: 'scale(1)', transition: '0s' });
+      content.css({ opacity: 0, transform: 'scale(0.8)', transition: '0s' });
+
+      // Start
+      setTimeout(() => {
+          img.css({ transform: 'scale(1.1)', transition: '6s linear' });
+          content.css({ opacity: 1, transform: 'scale(1)', transition: '1s ease-out' });
+      }, 50);
+  },
+
+    tilt: (box, state) => {
+        box.style.transition = 'transform 0.6s ease, opacity 0.5s ease';
+        box.style.transform = state === 'kreni' ? 'perspective(1000px) rotateX(8deg) translateY(-20px)' : 'perspective(1000px) rotateX(0deg) translateY(0)';
+        box.style.opacity = state === 'kreni' ? '0.4' : '1';
+    },
+
+    monohrom: (box, state) => {
+        box.style.transition = 'filter 0.7s ease, opacity 0.5s ease';
+        box.style.filter = state === 'kreni' ? 'grayscale(100%)' : 'grayscale(0%)';
+        box.style.opacity = state === 'kreni' ? '0.6' : '1';
+    },
+
+    // 🚀 NOVO: Kinematografski "Ken Burns" (Lagano klizanje slike)
+    kenBurns: (box, state) => {
+        const img = box.querySelector('img');
+        if (!img) return;
+        img.style.transition = state === 'kreni' ? 'none' : 'transform 10s linear';
+        img.style.transform = state === 'kreni' ? 'scale(1) translateX(0)' : 'scale(1.2) translateX(20px)';
+    },
+
+    // 🚀 NOVO: "Flash" (Beli bljesak pri promeni)
+    flash: (box, state) => {
+        box.style.transition = 'filter 0.3s ease-in';
+        box.style.filter = state === 'kreni' ? 'brightness(3) contrast(1.2)' : 'brightness(1) contrast(1)';
+    },
+
+    // 🚀 NOVO: "Pan Right" (Slajd izlazi desno, novi dolazi sleva)
+    pan: (box, state) => {
+        box.style.transition = 'transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.5s';
+        if (state === 'kreni') {
+            box.style.transform = 'translateX(50px)';
+            box.style.opacity = '0';
+        } else {
+            box.style.transform = 'translateX(0)';
+            box.style.opacity = '1';
+        }
+    }
+};
   OS(function() {
-      console.log('OpenShop framework uspešno inicijalizovan!');
-      OS('.datum-akcije').DatePicker({
-          disablePast: true, // Blokira jučerašnje dane
-          onSelect: function(izabranDatum) {
-              console.log("Admin je izabrao datum: " + izabranDatum);
+    window.pid= '11';
+     window.sid = '34';
+     window.galleryEngine = new OSProductGallery({
+         productId: window.pid || 0,
+         valueId: window.sid || 0,
+         ajaxUrl: window.base_path + window.ADMIN_PAGE + '/noviajax/colorupstart.php',
+         orderUrl: window.base_path + window.ADMIN_PAGE + '/noviajax/colorupstart.php'
+     });
+     const btnSelectImages = document.getElementById('btnSelectImages');
+     const inputImages = document.getElementById('upl');
+
+     if (btnSelectImages && inputImages) {
+         btnSelectImages.addEventListener('click', () => inputImages.click());
+         inputImages.addEventListener('change', function() {
+             if (this.files && this.files.length > 0) {
+                 window.galleryEngine.uploadImages(this.files);
+             }
+         });
+     }
+    OS('#lista-kategorija').Sortable({
+        handle: '.handle',
+        onUpdate: function() {
+            OS.notify.success(_P('Redosled kategorija promenjen!'));
+        }
+    });
+    OS("#tabela-proizvoda tbody").Sortable({
+
+         onUpdate: function() {
+            OS.notify.success("Redovi u tabeli su presloženi.");
           }
-      });
+    });
+
+
+    // 3. Inicijalizacija Dual Column DnD (Dvosmerno)
+    OS.initDualColumnDnD('#izvor-zona', '#cilj-zona', {
+        onUpdate: function() {
+            OS.notify.info(_P('Privilegije ažurirane.'));
+        }
+    });
+    OS('#mainSlider').Slider({
+        delay: 8000,
+        onMove: function(data) {
+            console.log("Slajder se pomerio na indeks: " + data.index);
+            // Npr. promeni boju menija na slajdu broj 2
+            if (data.index === 1) {
+                OS('.header').addClass('dark-mode');
+            } else {
+                OS('.header').removeClass('dark-mode');
+            }
+        }
+    });
+  OS('#mainSlider').on('osSlider:changed', function(e) {
+      const info = e.detail; // Tvoj OS.Event pakuje podatke u .detail
+      OS('#counter-display').text((info.index + 1) + " / " + info.total);
+  });
+    OS('#priceSlider').range({
+        step: 50, // Ručice će magnetno "skakati" na svakih 50 RSD
+        suffix: ' RSD',
+        onChange: function(min, max) {
+            OS('#minVal').text(min);
+            OS('#maxVal').text(max);
+        }
+    });
+    OS('#os-datum').DatePicker({
+         locale: 'en',
+
+         disablePast: true,      // Zaključava sve datume pre današnjeg
+      //  disableWeekends: true,  // Onemogućava klik na subote i nedelje
+        onSelect: function(formatiran, datumObjekat) {
+            // Callback: šta da se desi kad korisnik klikne na dan
+            const infoDiv = document.getElementById('info-datum');
+            infoDiv.style.display = 'block';
+            infoDiv.querySelector('strong').innerText = formatiran;
+
+            // Koristimo tvoj Notify sistem da potvrdimo akciju
+            OS.notify.success(_P('Datum uspešno izabran: ') + formatiran, 2000);
+
+            console.log("Stvarni JS Date objekat:", datumObjekat);
+        }
+    });
+      // Slušanje završetka izmene za slanje filtera
+
 
 
          OS('#color').SmartColorUI();
