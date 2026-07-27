@@ -463,6 +463,48 @@
                     </div>
                 </div>
 
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white fw-bold">
+                        <i class="fa-solid fa-bell text-info me-2"></i>7.e CORE NOTIFY MODUL (DYNAMIC API v2.7.0) - TEHNIČKO UPUTSTVO
+                    </div>
+                    <div class="card-body">
+
+                        <!-- 1. METODE I POKRETANJE -->
+                        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;"><i class="os-icon os-icon-code text-primary"></i> 1. Metode i Inicijalizacija u Kodu</h6>
+                        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+                            Pozivanje se vrši direktno kroz statički namespace bez HTML-a na stranici. Podržava brze Toasts (samogasive poruke) i Modale (dijalozi):
+                        </p>
+                        <div class="bg-light p-3 rounded border mb-4" style="font-family: monospace; font-size: 0.8rem; overflow-x: auto; color: #1e293b;">
+                // 🟢 Uspešan Toast (auto-hide 3s)
+                OS.notify.success('Poruka', 3000);
+                // 🔴 Error Toast | ⏳ Loading | 📋 Confirm Dialog
+                OS.notify.error('Greška');
+                OS.notify.loading('Učitavanje...');
+                OS.notify.confirm2('Pitanje?', function(){/*callback*/}, 'Naslov');
+                        </div>
+
+                        <!-- 2. PREGLED DOSTUPNIH METODA (TABELA) -->
+                        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;"><i class="os-icon os-icon-layers text-success"></i> 2. Funkcionalni API Pregled</h6>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-bordered table-striped" style="font-size: 0.85rem;">
+                                <thead class="table-light"><tr><th>Metoda</th><th>Tip</th><th>Opis</th></tr></thead>
+                                <tbody>
+                                    <tr><td><code>success/error</code></td><td><span class="badge bg-success">Toast</span></td><td>Zeleno/Crveno obaveštenje sa tajmerom.</td></tr>
+                                    <tr><td><code>loading</code></td><td><span class="badge bg-dark">Toast</span></td><td>Tamni overlay sa spinnerom.</td></tr>
+                                    <tr><td><code>alert/confirm2</code></td><td><span class="badge bg-primary">Modal</span></td><td>Informativni/Potvrdni dijalog.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 3. UNUTRAŠNJI MEHANIZAM RADA -->
+                        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;"><i class="os-icon os-icon-settings text-warning"></i> 3. Arhitektura</h6>
+                        <ul class="list-group list-group-flush mb-0" style="font-size: 0.85rem;">
+                            <li class="list-group-item px-0 bg-transparent py-2"><strong>Zero-HTML:</strong> Dinamički ubrizgava šablon u <code>&lt;body&gt;</code>.</li>
+                            <li class="list-group-item px-0 bg-transparent py-2"><strong>Lifecycle:</strong> <code>_reset()</code> čisti <code>timeouts</code> i evente.</li>
+                            <li class="list-group-item px-0 bg-transparent py-2"><strong>GPU:</strong> 300ms <code>opacity</code>/<code>transform</code> tranzicije.</li>
+                        </ul>
+                    </div>
+                </div>
 
                 <!-- ==========================================================================
                      CORE NOTIFY MODUL (V2.7.0) - DOKUMENTACIJA
