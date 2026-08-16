@@ -4,10 +4,14 @@
 
     function parseDatum(str, format) {
         if (!str) return null;
-        const separator = format.match(/[./-]/)[0];
-        const deloviFormata = format.split(separator);
+        // Ako format iz bilo kog razloga ne stigne, postavi podrazumevani DD/MM/YYYY
+        const trenutniFormat = format || 'DD/MM/YYYY';
+
+        const separator = trenutniFormat.match(/[./-]/)[0];
+        const deloviFormata = trenutniFormat.split(separator);
         const deloviDatuma = str.split(separator);
         let d = 1, m = 0, y = new Date().getFullYear();
+
         deloviFormata.forEach((part, i) => {
             if (part.includes('DD')) d = parseInt(deloviDatuma[i], 10);
             if (part.includes('MM')) m = parseInt(deloviDatuma[i], 10) - 1;
