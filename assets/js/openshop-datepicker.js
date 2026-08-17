@@ -2,10 +2,11 @@
     'use strict';
     if (!OS) return;
 
+    // FIX: Dodata provera za format da ne puca na .match() (Linija 9)
     function parseDatum(str, format) {
+        if (!format || typeof format !== 'string') format = 'DD/MM/YYYY';
         if (!str || typeof str !== 'string') return null;
 
-        // FIX 1: Bezbednija provera separatora (da ne pukne ako nema meča)
         const sepMatch = format.match(/[./-]/);
         if (!sepMatch) return null;
 
@@ -13,15 +14,12 @@
         const deloviFormata = format.split(separator);
         const deloviDatuma = str.split(separator);
 
-        // Ako se broj delova ne poklapa, datum je nevalidan
         if (deloviDatuma.length !== deloviFormata.length) return null;
 
         let d = 1, m = 0, y = new Date().getFullYear();
-
         deloviFormata.forEach((part, i) => {
             const val = parseInt(deloviDatuma[i], 10);
-            if (isNaN(val)) return; // Preskoči ako nije broj
-
+            if (isNaN(val)) return;
             if (part.includes('DD')) d = val;
             if (part.includes('MM')) m = val - 1;
             if (part.includes('YYYY')) y = val;
@@ -31,22 +29,14 @@
         return isNaN(date.getTime()) ? null : date;
     }
 
+    // FIX: Dodata provera za formatStr (Linija 28)
     function primeniFormat(date, formatStr) {
-        // 1. ODBRAMBENI ŠTIT: Ako format ne postoji, daj mu default ili vrati prazan string
-        if (!formatStr || typeof formatStr !== 'string') {
-            formatStr = 'DD/MM/YYYY'; // Ili neka tvoja globalna konstanta OS.defaultDateFormat
-        }
-
-        // 2. Osiguraj da je 'date' validan Date objekat
-        if (!(date instanceof Date) || isNaN(date.getTime())) {
-            return '';
-        }
+        if (!formatStr || typeof formatStr !== 'string') formatStr = 'DD/MM/YYYY';
+        if (!(date instanceof Date) || isNaN(date.getTime())) return '';
 
         const dd = String(date.getDate()).padStart(2, '0');
         const mm = String(date.getMonth() + 1).padStart(2, '0');
         const yyyy = date.getFullYear();
-
-        // 3. Sigurna zamena
         return formatStr.replace('YYYY', yyyy).replace('MM', mm).replace('DD', dd);
     }
 
@@ -57,9 +47,11 @@
             disablePast: false,
             onSelect: null
         };
-        const config = OS.extend({}, defaults, options || {});
 
-        // Lokalizacija (provera postojanja)
+        // Osiguravamo da config uvek ima validne vrednosti
+        const config = OS.extend({}, defaults, options || {});
+        if (!config.format) config.format = 'DD/MM/YYYY';
+
         const lokalizacija = (OS.dateLocales && OS.dateLocales[config.locale])
             ? OS.dateLocales[config.locale]
             : {
@@ -77,16 +69,15 @@
             const pickerEl = document.createElement('div');
             pickerEl.className = 'os-datepicker-container shadow-lg';
             pickerEl.style.display = 'none';
-            pickerEl.style.zIndex = '9999'; // FIX 2: Osiguran z-index
+            pickerEl.style.zIndex = '10000'; // Da bude iznad svih elemenata
             document.body.appendChild(pickerEl);
 
-            // Inicijalne vrednosti
             let selektovaniDatum = parseDatum(input.value, config.format);
             let prikazanaGodina = selektovaniDatum ? selektovaniDatum.getFullYear() : danas.getFullYear();
             let prikazaniMesec = selektovaniDatum ? selektovaniDatum.getMonth() : danas.getMonth();
 
             const render = () => {
-                // FIX 3: Rešavanje overflow-a meseci (ako klikneš prev/next više puta)
+                // Zaštita od prelivanja meseci
                 if (prikazaniMesec > 11) { prikazaniMesec = 0; prikazanaGodina++; }
                 if (prikazaniMesec < 0) { prikazaniMesec = 11; prikazanaGodina--; }
 
@@ -114,14 +105,11 @@
                 }
                 pickerEl.innerHTML = html + '</div>';
 
-                // Event Listeners (ponovo vezivanje nakon render-a)
                 pickerEl.querySelector('.os-dp-prev').onclick = (e) => {
-                    e.stopPropagation(); prikazaniMesec--;
-                    render();
+                    e.stopPropagation(); prikazaniMesec--; render();
                 };
                 pickerEl.querySelector('.os-dp-next').onclick = (e) => {
-                    e.stopPropagation(); prikazaniMesec++;
-                    render();
+                    e.stopPropagation(); prikazaniMesec++; render();
                 };
 
                 pickerEl.querySelectorAll('.os-dp-day:not(.os-dp-disabled)').forEach(el => {
@@ -130,8 +118,7 @@
                         selektovaniDatum = new Date(prikazanaGodina, prikazaniMesec, parseInt(this.dataset.dan));
                         input.value = primeniFormat(selektovaniDatum, config.format);
                         zatvori();
-
-                        // FIX 4: Okidanje 'change' eventa da bi OS.Store (Proxy) detektovao promenu
+                        // Okidamo change event da bi OS.Store (Proxy) video promenu
                         input.dispatchEvent(new Event('change', { bubbles: true }));
                         if (config.onSelect) config.onSelect(input.value, selektovaniDatum);
                     };
@@ -146,17 +133,14 @@
                 if (isMobile) {
                     pickerEl.classList.add('os-dp-mobile');
                     if (!overlay) {
-                        overlay = document.createElement('div');
-                        overlay.id = 'os-dp-overlay';
-                        overlay.className = 'os-datepicker-overlay'; // Dodaj CSS za ovo
+                        overlay = document.createElement('div'); overlay.id = 'os-dp-overlay';
                         document.body.appendChild(overlay);
                     }
                     overlay.style.display = 'block';
                 } else {
                     pickerEl.classList.remove('os-dp-mobile');
                     const spaceBelow = window.innerHeight - rect.bottom;
-                    const topPos = (spaceBelow < 320 ? rect.top + window.scrollY - 330 : rect.bottom + window.scrollY + 5);
-                    pickerEl.style.top = topPos + 'px';
+                    pickerEl.style.top = (spaceBelow < 320 ? rect.top + window.scrollY - 330 : rect.bottom + window.scrollY + 5) + 'px';
                     pickerEl.style.left = (rect.left + window.scrollX) + 'px';
                     if (overlay) overlay.style.display = 'none';
                 }
@@ -170,14 +154,11 @@
 
             OS(input).on('click', (e) => {
                 e.stopPropagation();
-                // Resetuj prikaz na selektovani ili današnji datum pri otvaranju
-                const refDate = selektovaniDatum || danas;
-                prikazanaGodina = refDate.getFullYear();
-                prikazaniMesec = refDate.getMonth();
-
-                render();
-                pozicioniraj();
-                pickerEl.style.display = 'block';
+                // Reset na selektovani datum pri otvaranju
+                const d = selektovaniDatum || danas;
+                prikazanaGodina = d.getFullYear();
+                prikazaniMesec = d.getMonth();
+                render(); pozicioniraj(); pickerEl.style.display = 'block';
             });
 
             document.addEventListener('click', (e) => {
