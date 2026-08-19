@@ -1,6 +1,7 @@
 /**
- * OPENSHOP FRAMEWORK - PRODUCT 3D INTERACTIVE VIEWER v1.2.1
- * DODATO: Tastatura (arrows), Error handling, Mobile scroll fix, Style guard.
+ * OPENSHOP FRAMEWORK - PRODUCT 3D INTERACTIVE VIEWER v1.6.2 (FINAL)
+ * Arhitektura: Zoran Milićević & OpenShop Engine
+ * Karakteristike: Centriran Layout, Smart Responsive, HUD HTML Support, Cinematic Play.
  */
 (function(OS) {
     if (typeof OS === 'undefined') return;
@@ -9,181 +10,186 @@
         this.defaultOptions = {
             front: '', left: '', right: '', top: '', bottom: '',
             sensitivity: 15,
-            zoomScale: 2.5,
-            loadingText: typeof _P === 'function' ? _P('Loading 3D View...') : 'Loading 3D View...'
+            zoomScale: 2.2,
+            autoPlaySpeed: 1800,
+            viewNames: {
+                front: 'MASTER FRONT VIEW',
+                left: 'LEFT SIDE PROFILE',
+                right: 'RIGHT SIDE PROFILE',
+                top: 'TOP AERODYNAMICS',
+                bottom: 'BASE CONSTRUCTION'
+            }
         };
 
         this.config = Object.assign({}, this.defaultOptions, options || {});
         this.$el = OS(element);
         this.rawEl = typeof element === 'string' ? document.querySelector(element) : element;
 
-        if (!this.rawEl || !this.config.front) return;
-
         this.images = {};
         this.currentActive = 'front';
         this.isZoomed = false;
-        this.touchStartX = 0;
-        this.touchStartY = 0;
+        this.isPlaying = false;
+        this.playInterval = null;
+
+        if (!this.rawEl || !this.config.front) return;
         this.init();
     }
 
     Product3D.prototype.init = function() {
         let self = this;
 
-        // 1. STYLE GUARD: Sprečava dupliranje CSS-a u head-u
-        if (!document.getElementById('os-3d-viewer-css')) {
+        if (!document.getElementById('os-3d-master-css')) {
             let style = document.createElement('style');
-            style.id = 'os-3d-viewer-css';
+            style.id = 'os-3d-master-css';
             style.textContent = `
-                @keyframes os3dPulsate {
-                    0% { transform: scale(1); opacity: 0.4; }
-                    50% { transform: scale(1.1); opacity: 0.8; }
-                    100% { transform: scale(1); opacity: 0.4; }
+                .os-3d-wrapper {
+                    position: relative; width: 100%; max-width: 650px;
+                    aspect-ratio: 1 / 1; margin: 0 auto; overflow: hidden;
+                    background: #fff; border-radius: 12px; border: 1px solid #eee; touch-action: none;
                 }
-                .os-3d-wrapper:focus { outline: none; box-shadow: 0 0 0 2px #fb923c; }
-                .os-3d-wrapper { touch-action: none; transition: box-shadow 0.3s ease; }
-                .os-3d-arrow {
-                    position: absolute; z-index: 10; font-size: 20px; color: #fb923c;
-                    background: rgba(255,255,255,0.9); width: 36px; height: 36px;
-                    display: flex; align-items: center; justify-content: center;
-                    border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                    transition: all 0.25s ease; animation: os3dPulsate 2s infinite ease-in-out;
-                    pointer-events: none;
+
+                .os-3d-wrapper img {
+                    position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto;
+                    max-width: 95%; max-height: 95%; width: auto !important; height: auto !important;
+                    object-fit: contain; opacity: 0; z-index: 1; transform: scale(1);
+                    transition: opacity 0.4s ease-out, transform 1.5s cubic-bezier(0.1, 0, 0.3, 1);
                 }
-                .os-3d-wrapper:hover .os-3d-arrow { opacity: 0; }
-                .os-3d-wrapper img { transform-origin: center center; transition: opacity 0.15s ease, transform 0.1s ease-out; }
+
+                .os-3d-wrapper img.active-view { opacity: 1; z-index: 2; }
+                .is-playing img.active-view { transform: scale(1.12); }
+
+                .os-3d-vignette {
+                    position: absolute; inset: 0; z-index: 5; opacity: 0; transition: opacity 1s;
+                    background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.4) 100%); pointer-events: none;
+                }
+                .is-playing .os-3d-vignette { opacity: 1; }
+
+                .os-3d-hud {
+                    position: absolute; top: 20px; left: 20px; z-index: 10;
+                    opacity: 0.7; transition: opacity 0.5s, transform 0.3s; pointer-events: none;
+                }
+
+                .os-3d-wrapper:hover .os-3d-hud, .is-playing .os-3d-hud {
+                    opacity: 1; transform: scale(1.05);
+                }
+
+                #os-hud-text {
+                    color: #fff; font-family: 'Courier New', monospace; letter-spacing: 2px;
+                    text-transform: uppercase; text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+                }
+
+                .os-3d-rec {
+                    display: inline-block; width: 8px; height: 8px; background: red;
+                    border-radius: 50%; margin-right: 8px; display: none;
+                }
+                .is-playing .os-3d-rec { display: inline-block; animation: os-blink 1s infinite; }
+
+                @keyframes os-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+                .os-3d-loader { background: #fff; z-index: 20; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
             `;
             document.head.appendChild(style);
         }
 
-        // 2. HTML STRUKTURA (Dodat tabindex="0" za keyboard support)
-        let html = `
-            <div class="os-3d-wrapper" tabindex="0" aria-label="3D Product Viewer" style="position: relative; width: 100%; overflow: hidden; cursor: zoom-in; user-select: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                <div class="os-3d-loader" style="position: absolute; top:0; left:0; width:100%; height:100%; background:#fff; z-index:20; display:flex; align-items:center; justify-content:center; font-size:13px; color:#6c757d;">
-                    <span class="spinner-border spinner-border-sm me-2 text-primary"></span>${this.config.loadingText}
+        this.rawEl.innerHTML = `
+            <div class="os-3d-wrapper rounded-4 shadow-lg">
+                <div class="os-3d-vignette"></div>
+                <div class="os-3d-hud">
+                    <div class="d-flex align-items-center">
+                        <span class="os-3d-rec"></span>
+                        <span id="os-hud-text"></span>
+                    </div>
                 </div>
-                ${this.config.top ? `<div class="os-3d-arrow" style="top: 15px; left: 50%; transform: translateX(-50%);">&#8593;</div>` : ''}
-                ${this.config.bottom ? `<div class="os-3d-arrow" style="bottom: 15px; left: 50%; transform: translateX(-50%);">&#8595;</div>` : ''}
-                ${this.config.left ? `<div class="os-3d-arrow" style="left: 15px; top: 50%; transform: translateY(-50%);">&#8592;</div>` : ''}
-                ${this.config.right ? `<div class="os-3d-arrow" style="right: 15px; top: 50%; transform: translateY(-50%);">&#8594;</div>` : ''}
-                <img data-view="front" src="${this.config.front}" style="display: block; width: 100%; height: auto; z-index: 2;">
-                ${['left', 'right', 'top', 'bottom'].map(v => this.config[v] ? `<img data-view="${v}" src="${this.config[v]}" style="position: absolute; top:0; left:0; width: 100%; height: auto; opacity: 0; z-index: 1;">` : '').join('')}
+                <div class="os-3d-loader"><div class="spinner-grow text-warning"></div></div>
+                <img data-view="front" class="active-view" src="${this.config.front}">
+                ${['left', 'right', 'top', 'bottom'].map(v => this.config[v] ? `<img data-view="${v}" src="${this.config[v]}">` : '').join('')}
             </div>
         `;
 
-        this.rawEl.innerHTML = html;
-        this.$wrapper = this.$el.find('.os-3d-wrapper');
-        this.$loader = this.$el.find('.os-3d-loader');
+        this.hud = this.rawEl.querySelector('#os-hud-text');
+        if(this.hud) this.hud.innerHTML = this.config.viewNames.front;
 
-        let ispisaneSlike = this.rawEl.querySelectorAll('.os-3d-wrapper img');
-        let ucitanoSlika = 0;
+        let ucitano = 0;
+        let imgs = this.rawEl.querySelectorAll('img');
+        const removeLoader = () => { const l = this.rawEl.querySelector('.os-3d-loader'); if(l) l.remove(); };
 
-        // 3. ERROR HANDLING: Brojač koji se okida i na uspeh i na grešku
-        const checkDone = () => {
-            ucitanoSlika++;
-            if (ucitanoSlika >= ispisaneSlike.length) self.$loader.remove();
-        };
-
-        ispisaneSlike.forEach(img => {
-            self.images[img.getAttribute('data-view')] = img;
-            if (img.complete) checkDone();
-            else {
-                img.onload = checkDone;
-                img.onerror = checkDone; // Skloni loader čak i ako slika pukne
-            }
+        imgs.forEach(img => {
+            this.images[img.dataset.view] = img;
+            img.onload = img.onerror = () => { ucitano++; if(ucitano >= imgs.length) removeLoader(); };
+            if(img.complete) img.onload();
         });
 
         this.bindEvents();
     };
 
+    Product3D.prototype.setView = function(view) {
+        if (!this.images[view] || view === this.currentActive) return;
+
+        Object.keys(this.images).forEach(k => this.images[k].classList.remove('active-view'));
+        this.images[view].classList.add('active-view');
+        this.currentActive = view;
+
+        if(this.hud) {
+            this.hud.innerHTML = this.config.viewNames[view] || view;
+            // Kratki flash efekat HUD-a pri promeni
+            this.hud.parentElement.style.opacity = "1";
+            setTimeout(() => { this.hud.parentElement.style.opacity = ""; }, 1500);
+        }
+    };
+
+    Product3D.prototype.playMovie = function(btn) {
+        const wrapper = this.rawEl.querySelector('.os-3d-wrapper');
+        if (this.isPlaying) {
+            clearInterval(this.playInterval);
+            this.isPlaying = false;
+            wrapper.classList.remove('is-playing');
+            btn.innerHTML = '<i class="fa-solid fa-play"></i>';
+            btn.classList.replace('btn-danger', 'btn-warning');
+            this.setView('front');
+            return;
+        }
+
+        this.isPlaying = true;
+        wrapper.classList.add('is-playing');
+        btn.innerHTML = '<i class="fa-solid fa-stop"></i>';
+        btn.classList.replace('btn-warning', 'btn-danger');
+
+        const order = ['front', 'left', 'top', 'right', 'bottom'].filter(v => this.images[v]);
+        let i = 0;
+        this.playInterval = setInterval(() => {
+            i = (i + 1) % order.length;
+            this.setView(order[i]);
+        }, this.config.autoPlaySpeed);
+    };
+
     Product3D.prototype.bindEvents = function() {
         const self = this;
-        let rawWrapper = this.rawEl.querySelector('.os-3d-wrapper');
-        let sveStrelice = this.rawEl.querySelectorAll('.os-3d-arrow');
+        const wrapper = this.rawEl.querySelector('.os-3d-wrapper');
 
-        const promeniUgao = (novi) => {
-            if (self.isZoomed || novi === self.currentActive || !self.images[novi]) return;
-            Object.keys(self.images).forEach(k => {
-                self.images[k].style.opacity = (k === novi) ? '1' : '0';
-                self.images[k].style.zIndex = (k === novi) ? '2' : '1';
-            });
-            self.currentActive = novi;
-        };
-
-        // EVENT: MouseMove (Rotation & Zoom)
-        OS(rawWrapper).on('mousemove', function(e) {
-            let r = rawWrapper.getBoundingClientRect();
-            let x = e.clientX - r.left, y = e.clientY - r.top;
-
-            if (self.isZoomed) {
-                self.images[self.currentActive].style.transformOrigin = `${(x/r.width)*100}% ${(y/r.height)*100}%`;
-                self.images[self.currentActive].style.transform = `scale(${self.config.zoomScale})`;
-            } else {
-                let dx = x - r.width/2, dy = y - r.height/2;
-                let s = self.config.sensitivity;
-                let novi = 'front';
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    if (dx < -s) novi = 'left'; else if (dx > s) novi = 'right';
-                } else {
-                    if (dy < -s) novi = 'top'; else if (dy > s) novi = 'bottom';
-                }
-                promeniUgao(novi);
-            }
-        });
-
-        // EVENT: Klik za Zoom
-        OS(rawWrapper).on('click', function(e) {
-            self.isZoomed = !self.isZoomed;
-            rawWrapper.style.cursor = self.isZoomed ? 'zoom-out' : 'zoom-in';
-            sveStrelice.forEach(a => a.style.display = self.isZoomed ? 'none' : '');
-            if (!self.isZoomed) self.images[self.currentActive].style.transform = 'scale(1)';
-        });
-
-        // EVENT: Keyboard (Strelice na tastaturi)
-        rawWrapper.onkeydown = (e) => {
-            if (e.key === 'ArrowLeft') promeniUgao('left');
-            else if (e.key === 'ArrowRight') promeniUgao('right');
-            else if (e.key === 'ArrowUp') promeniUgao('top');
-            else if (e.key === 'ArrowDown') promeniUgao('bottom');
-            else if (e.key === 'Escape') { // Reset na front
-                self.isZoomed = false;
-                promeniUgao('front');
-                self.images[self.currentActive].style.transform = 'scale(1)';
-            }
-        };
-
-        // EVENT: Mobile Touch (Sprečava scroll stranice dok se rotira proizvod)
-        OS(rawWrapper).on('touchstart', e => {
-            self.touchStartX = e.touches[0].clientX;
-            self.touchStartY = e.touches[0].clientY;
-        });
-
-        OS(rawWrapper).on('touchmove', e => {
-            if (self.isZoomed) return;
-            e.preventDefault(); // FIX: Sprečava mrdanje cele stranice na mobilnom
-
-            let dx = e.touches[0].clientX - self.touchStartX;
-            let dy = e.touches[0].clientY - self.touchStartY;
+        OS(wrapper).on('mousemove', (e) => {
+            if (self.isPlaying) return;
+            let r = wrapper.getBoundingClientRect();
+            let dx = e.clientX - r.left - r.width/2, dy = e.clientY - r.top - r.height/2;
             let s = self.config.sensitivity;
             let novi = 'front';
-
             if (Math.abs(dx) > Math.abs(dy)) {
-                if (dx < -s) novi = 'right'; else if (dx > s) novi = 'left';
+                if (dx < -s) novi = 'left'; else if (dx > s) novi = 'right';
             } else {
-                if (dy < -s) novi = 'bottom'; else if (dy > s) novi = 'top';
+                if (dy < -s) novi = 'top'; else if (dy > s) novi = 'bottom';
             }
-            promeniUgao(novi);
-        }, { passive: false }); // Važno za e.preventDefault()
+            self.setView(novi);
+        });
 
-        OS(rawWrapper).on('mouseleave', () => {
-            self.isZoomed = false;
-            rawWrapper.style.cursor = 'zoom-in';
-            promeniUgao('front');
-            Object.keys(self.images).forEach(k => self.images[k].style.transform = 'scale(1)');
+        OS(wrapper).on('click', function(e) {
+            if (self.isPlaying) return;
+            self.isZoomed = !self.isZoomed;
+            wrapper.style.cursor = self.isZoomed ? 'zoom-out' : 'zoom-in';
+            if (!self.isZoomed) self.images[self.currentActive].style.transform = 'scale(1)';
         });
     };
 
     OS.prototype.Product3D = function(options) {
-        return this.each(function() { new Product3D(this, options); });
+        return this.each(function() {
+            if (!this.os3dInstance) this.os3dInstance = new Product3D(this, options);
+        });
     };
 })(window.OS);
