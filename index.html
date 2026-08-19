@@ -98,22 +98,9 @@
                    margin-top: 15px;
                    white-space: pre-wrap;
                }
-               .os-slider-wrapper {
-                   width: 100%;
-                   max-width: 400px;
-                   margin: 40px auto;
-                   padding: 0 15px;
-               }
-               .os-slider-container {
-                   position: relative;
-                   width: 100%;
-                   height: 6px;
-                   background: #e2e8f0;
-                   border-radius: 10px;
-                   user-select: none;
-                   cursor: pointer;
-                   margin: 30px 0; /* Prostor za tooltipe iznad */
-               }
+
+
+
 
     </style>
     <link rel="stylesheet" href="assets/css/openshop.range.css?v=2321">
@@ -341,25 +328,67 @@
             <!-- 2. Test za Product 3D Modul -->
             <div class="card mb-4 border-0 shadow-sm">
                 <div class="card-header py-3 bg-white text-secondary fw-semibold border-bottom">
-                    <i class="fa-solid fa-cube me-2 text-primary"></i> 2. Interaktivni 3D Prikaz Proizvoda
+                    <i class="fa-solid fa-cube me-2 text-primary"></i> 2.  - PRODUCT 3D INTERACTIVE VIEWER v1.5.1
                 </div>
                 <div class="card-body">
                     <div class="row">
+
                         <!-- Leva kolona: Interaktivni 3D Render Proizvoda -->
-                        <div class="col-md-6 text-center mb-4 mb-md-0">
+                        <div class="col-md-12 text-center mb-4 mb-md-0">
                             <h5 class="card-title text-dark mb-3 fw-bold text-start">3D Preview</h5>
 
-                            <!-- GLAVNI KONTEJNER U KOJI PLUGIN UCITAVA 3D SLIKE I STRELICE -->
-                            <div id="open-shop-3d-viewer" style="max-width: 480px; margin: 0 auto;"></div>
+                            <div class="col-lg-6 mx-auto text-center py-5">
 
-                            <p class="text-muted small mt-3">
-                                <i class="fa-solid fa-arrow-pointer me-1 text-primary"></i> Move mouse to rotate |
-                                <i class="fa-solid fa-magnifying-glass-plus ms-2 me-1 text-primary"></i> Click to toggle HD Zoom
-                            </p>
-                        </div>
+                              <div id="product-3d-cinema"></div>
+
+                              <!-- D-PAD KONTROLE -->
+                              <div class="mt-4">
+                                  <div class="btn-group shadow rounded-pill bg-white p-2">
+                                    <button class="btn btn-link text-dark fw-bold" onclick="my3d.setView('left')">
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                    </button>
+                             <button class="btn btn-link text-dark" onclick="my3d.setView('top')"><i class="fa-solid fa-chevron-up"></i></button>
+
+                                      <button class="btn btn-warning rounded-circle shadow mx-2" style="width:60px; height:60px; color:#fff" onclick="my3d.playMovie(this)">
+                                          <i class="fa-solid fa-play"></i>
+                                      </button>
+
+                                      <button class="btn btn-link text-dark" onclick="my3d.setView('bottom')"><i class="fa-solid fa-chevron-down"></i></button>
+                                      <button class="btn btn-link text-dark" onclick="my3d.setView('right')"><i class="fa-solid fa-chevron-right"></i></button>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <script>
+                              window.my3d = null;
+                              document.addEventListener("DOMContentLoaded", function() {
+                                  const elements = OS('#product-3d-cinema').Product3D({
+                                      front: 'front.png',
+                                      left: 'left.png',
+                                      right: 'desno.png',
+                                      top: 'top.png',
+                                      bottom: 'bottom.png',
+                                      transitionEffect: 'none', // PROMENI OVDE: blur, flash, glitch, ili tilt , none
+                                      autoPlaySpeed: 2000,
+                                      viewNames: {
+                                          front: '<span style="color: #000; text-shadow: 2px 2px 4px #000; font-weight: bold;">POGLED SPREDA</span>',
+                                          left: '<span class="badge bg-warning text-dark">BOČNI PROFIL</span>', // Primer sa Bootstrap bedžom
+                                          right: '<div style="color:  #000; border-left: 3px solid #fb923c; padding-left: 10px;">DESNI PROFIL</div>',
+                                          top: '<b style="color: red;">GORNJA STRANA</b>',
+                                          bottom: '<i style="color:  #000;">DONJA STRANA</i>'
+                                      }
+                                  });
+                                  if (elements && elements[0]) {
+                                      window.my3d = elements[0].os3dInstance;
+                                  }
+                              });
+
+                          </script>
+
+
 
                         <!-- Desna kolona: Uputstvo i tehnička specifikacija za developere -->
-                        <div class="col-md-6 border-start-md">
+                        <div class="col-md-12 border-start-md">
                             <h5 class="card-title text-dark mb-3 fw-bold">Tehnička Specifikacija</h5>
                             <p class="card-text text-muted small">
                                 Ovaj napredni modul koristi 5 studijskih fotografija visoke rezolucije slikanih iz fiksnih uglova kako bi stvorio prostorni 3D efekat. Modul automatski detektuje mobilne touch gestove i podržava detaljan HD pregled teksture.
@@ -397,29 +426,7 @@
                 </div>
             </div>
             <!-- Inicijalizacija 3D Modula na stranici proizvoda -->
-            <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Provera da li je OpenShop framework i naš plugin uspešno učitan
-                if (typeof OS !== 'undefined' && typeof OS.prototype.Product3D === 'function') {
 
-                    // Pokretanje konačne verzije 3D prikaza nad pripremljenim HTML kontejnerom
-                    OS('#open-shop-3d-viewer').Product3D({
-
-                        front: 'krema.jpg',
-                        left: 'krema.jpg',
-                        right: 'krema.jpg',
-                        top: 'krema.jpg',
-                        bottom: 'krema.jpg',
-                        sensitivity: 20,
-                        zoomScale: 2.5,
-                        loadingText: typeof _P === 'function' ? _P('Učitavanje 3D prikaza...') : 'Učitavanje 3D prikaza...'
-                    });
-
-                } else {
-                    console.error("OpenShop Framework ili Product3D plugin nisu pronađeni na stranici.");
-                }
-            });
-            </script>
 
                 <!-- ==========================================================================
                      IMAGE PREVIEW MODUL (V2.7.2) - KOMPLETNA DOKUMENTACIJA
@@ -1687,7 +1694,7 @@ $proizvodi = $db-&gt;execute($query, $params);
       <script src="assets/js/openshop.slider.js?1a2"></script>
           <script src="assets/js/openshop-sortable.js?1vae5rtr"></script>
   <script src="assets/js/openshop-galery.js?15a5"></script>
-    <script src="assets/js/3d.js?15a5"></script>
+    <script src="assets/js/3d.js?15"></script>
   <style type="text/css">
 
   </style>
