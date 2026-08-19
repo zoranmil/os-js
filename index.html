@@ -197,120 +197,230 @@
                   </div>
               </div>
 
-                <!-- 1. Test za Selects Modul -->
-                <div class="card">
+              <!-- 1. Test for Selects Module -->
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header py-3 bg-white text-secondary fw-semibold border-bottom">
+                    <i class="fa-solid fa-list-ul me-2 text-primary"></i> 1. Custom Selects Module
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-dark mb-3 fw-bold">Documentation & Usage Guide</h5>
+                    <p class="card-text text-muted small">
+                        This module converts standard HTML <code>&lt;select&gt;</code> elements into modern dropdown menus with support for live local searching and asynchronous AJAX-driven lookups, while fully preserving selected entries (Select2 UX logic). The module is natively integrated with the reactive OpenShop DOM engine (Two-Way Data Binding).
+                    </p>
 
-                    <div class="card-header py-3 text-secondary">
-                        <i class="fa-solid fa-list-ul me-2"></i> 1. Custom Selects Modul
+                    <hr class="text-black-50 my-4">
+
+                    <!-- Section: Basic Initialization -->
+                    <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-code me-2 small text-primary"></i> 1. Initialization</h6>
+                    <p class="small text-secondary mb-2">Initialization is executed directly via your core <code>OpenShop</code> (<code>OS</code>) DOM library:</p>
+                    <pre class="bg-light p-3 rounded small border text-dark mb-4"><code>// Minimal local mode (search disabled)
+            OS('#my-select').Selects();
+
+            // Local mode with real-time DOM-based search enabled
+            OS('#categories').Selects({
+                issearch: true,
+                placeholder: 'Choose category...'
+            });</code></pre>
+
+                    <!-- Section: Configuration Options -->
+                    <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-sliders me-2 small text-primary"></i> 2. Configuration Options</h6>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-sm table-bordered table-striped small align-middle">
+                            <thead class="table-light text-secondary">
+                                <tr>
+                                    <th style="width: 15%;">Option</th>
+                                    <th style="width: 10%;">Type</th>
+                                    <th style="width: 15%;">Default</th>
+                                    <th style="width: 60%;">Description and Usage Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold text-primary"><code>issearch</code></td>
+                                    <td><span class="badge bg-secondary">Boolean</span></td>
+                                    <td><code>false</code></td>
+                                    <td>Activates the search text input field inside the dropdown menu. If the <code>ajax</code> configuration object is defined, this option is forced to <code>true</code> automatically.</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-primary"><code>placeholder</code></td>
+                                    <td><span class="badge bg-secondary">String</span></td>
+                                    <td><code>'Choose...'</code></td>
+                                    <td>The default text displayed on the main form button before any selection is made. Fully compatible with the local localization wrapper function <code>_P()</code>.</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-primary"><code>searchPlaceholder</code></td>
+                                    <td><span class="badge bg-secondary">String</span></td>
+                                    <td><code>'Search...'</code></td>
+                                    <td>The placeholder string visible inside the search input box before typing begins. Automatically localized through <code>_P()</code>.</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-primary"><code>maxHeight</code></td>
+                                    <td><span class="badge bg-secondary">String</span></td>
+                                    <td><code>'280px'</code></td>
+                                    <td>Defines the maximum height constraint for the dropdown menu panel. If the item count exceeds this value, a vertical scrollbar triggers gracefully (e.g., <code>'400px'</code>).</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-primary"><code>minimumInputLength</code></td>
+                                    <td><span class="badge bg-secondary">Integer</span></td>
+                                    <td><code>0</code></td>
+                                    <td>The minimum character threshold required to fire an AJAX query. If explicitly set to <code>0</code>, it activates <strong>Eager Loading</strong> (fetches initial backend results on first click). If set to <code>2</code>, it waits for a 2-character input.</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-primary"><code>loadingText</code></td>
+                                    <td><span class="badge bg-secondary">String</span></td>
+                                    <td><code>'Loading...'</code></td>
+                                    <td>The notification string rendered alongside a smooth CSS spinner icon while a background network fetch API transaction is actively taking place.</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-primary"><code>noResultsText</code></td>
+                                    <td><span class="badge bg-secondary">String</span></td>
+                                    <td><code>'No results found'</code></td>
+                                    <td>The placeholder text appended to the list view when a search filtering operation (whether local DOM filtering or remote server response data) produces no records.</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-primary"><code>ajax</code></td>
+                                    <td><span class="badge bg-secondary">Object</span></td>
+                                    <td><code>null</code></td>
+                                    <td>The asynchronous query parameter configuration object. Maps background lookup behaviors via the <code>embed_url</code>, <code>delay</code>, <code>data</code>, and <code>processResults</code> parameters.</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-primary"><code>onSelect</code></td>
+                                    <td><span class="badge bg-secondary">Function</span></td>
+                                    <td><code>null</code></td>
+                                    <td>An optional callback routine triggered immediately when an element choice occurs. Supplies a precise key identifier string, selected array payloads, and raw DOM handle arguments.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="card">
 
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">Dokumentacija i Uputstvo za Upotrebu</h5>
+                    <!-- Section: Advanced Usage Example -->
+                    <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-wand-magic-sparkles me-2 small text-primary"></i> 3. Advanced Configuration Example (AJAX + Eager Loading + Callback)</h6>
+                    <p class="small text-secondary mb-2">The following implementation example handles live records loading from the database instantly upon mouse click (<code>minimumInputLength: 0</code>), customizes backend request structures, and fires an evaluation wrapper routine:</p>
+
+                    <pre class="bg-light p-3 rounded small border text-dark mb-0"><code>OS("#f_korisnici").Selects({
+                placeholder: _P('Select user'),
+                searchPlaceholder: _P('Search users...'),
+                minimumInputLength: 0, // 0 = Eager Loading (fetches on click), 2 = waits for 2 keyed chars
+                maxHeight: '350px', // Larger display boundary container constraints
+                onSelect: function(selectedId, nativeSelect) {
+                    console.log("Active Selection Payload:", selectedId);
+                    // Fire custom internal OpenShop evaluation procedures to re-sync adjacent inputs
+                    if (typeof User === 'function') {
+                        User();
+                    }
+                },
+                ajax: {
+                    embed_url: `${APPL_DIR}${ADMIN_PAGE}/ajax/user_view`,
+                    delay: 250, // Anti-hammer debounce delay constraint window in milliseconds
+                    data: function(params) {
+                        return {
+                            op: 'trazi',
+                            q: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        // Defensive runtime validation block if the application router serves text instead of object structures
+                        if (typeof data === 'string') {
+                            try { data = JSON.parse(data); } catch (e) { console.error(e); }
+                        }
+
+                        // Format incoming collection maps precisely into plugin requirements: { id, text }
+                        var resultsArray = (data.items || []).map(function(userRecord) {
+                            return {
+                                id: userRecord.id,
+                                text: userRecord.first_name || userRecord.text || 'Unnamed Operator'
+                            };
+                        });
+
+                        return { results: resultsArray };
+                    }
+                }
+            });</code></pre>
+                </div>
+            </div>
+            <!-- 2. Test za Product 3D Modul -->
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header py-3 bg-white text-secondary fw-semibold border-bottom">
+                    <i class="fa-solid fa-cube me-2 text-primary"></i> 2. Interaktivni 3D Prikaz Proizvoda
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Leva kolona: Interaktivni 3D Render Proizvoda -->
+                        <div class="col-md-6 text-center mb-4 mb-md-0">
+                            <h5 class="card-title text-dark mb-3 fw-bold text-start">3D Preview</h5>
+
+                            <!-- GLAVNI KONTEJNER U KOJI PLUGIN UCITAVA 3D SLIKE I STRELICE -->
+                            <div id="open-shop-3d-viewer" style="max-width: 480px; margin: 0 auto;"></div>
+
+                            <p class="text-muted small mt-3">
+                                <i class="fa-solid fa-arrow-pointer me-1 text-primary"></i> Move mouse to rotate |
+                                <i class="fa-solid fa-magnifying-glass-plus ms-2 me-1 text-primary"></i> Click to toggle HD Zoom
+                            </p>
+                        </div>
+
+                        <!-- Desna kolona: Uputstvo i tehnička specifikacija za developere -->
+                        <div class="col-md-6 border-start-md">
+                            <h5 class="card-title text-dark mb-3 fw-bold">Tehnička Specifikacija</h5>
                             <p class="card-text text-muted small">
-                                Ovaj modul pretvara standardne HTML <code>&lt;select&gt;</code> elemente u moderne dropdown menije sa podrškom za lokalnu pretragu i asinhroni AJAX search, uz potpuno očuvanje selektovanih stavki (Select2 logika).
+                                Ovaj napredni modul koristi 5 studijskih fotografija visoke rezolucije slikanih iz fiksnih uglova kako bi stvorio prostorni 3D efekat. Modul automatski detektuje mobilne touch gestove i podržava detaljan HD pregled teksture.
                             </p>
 
-                            <hr>
-
-                            <!-- Sekcija: Osnovno pokretanje -->
-                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-code me-2 small text-primary"></i> 1. Inicijalizacija</h6>
-                            <p class="small text-secondary mb-2">Pokretanje se vrši direktno preko tvoje <code>OpenShop</code> (<code>OS</code>) biblioteke:</p>
-                            <pre class="bg-light p-2 rounded small border text-dark mb-4"><code>// Minimalni lokalni režim
-                    OS('#moj-select').Selects();</code></pre>
-
-                            <!-- Sekcija: Opcije konfiguracije -->
-                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-sliders me-2 small text-primary"></i> 2. Sve Opcije Konfiguracije</h6>
-                            <div class="table-responsive mb-4">
-                                <table class="table table-sm table-bordered small align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Opcija</th>
-                                            <th>Tip</th>
-                                            <th>Default</th>
-                                            <th>Opis</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><code>issearch</code></td>
-                                            <td><span class="badge bg-secondary">Boolean</span></td>
-                                            <td><code>false</code></td>
-                                            <td>Prikazuje polje za kucanje i filtriranje opcija.</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>placeholder</code></td>
-                                            <td><span class="badge bg-secondary">String</span></td>
-                                            <td><code>'Select'</code></td>
-                                            <td>Podrazumevani tekst na glavnom dugmetu.</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>ajaxUrl</code></td>
-                                            <td><span class="badge bg-secondary">String</span></td>
-                                            <td><code>''</code></td>
-                                            <td>URL adresa servera. Aktivira <strong>AJAX režim</strong> pretrage.</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>data</code></td>
-                                            <td><span class="badge bg-secondary">Object</span></td>
-                                            <td><code>{ q: 'q' }</code></td>
-                                            <td>Format GET parametra koji šalješ serveru (npr. <code>{ pojam: '' }</code>).</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>onSelect</code></td>
-                                            <td><span class="badge bg-secondary">Function</span></td>
-                                            <td><code>null</code></td>
-                                            <td>Callback funkcija koja se okida nakon klika na opciju.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="p-3 bg-light rounded border border-light small mb-3 text-secondary">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <strong>Tehnologija:</strong> <span>Pure Vanilla JS / OpenShop Core</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <strong>Mobilna podrška:</strong> <span>Touch Events (Swipe rotate)</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <strong>HD Zoom (Lupa):</strong> <span>Faktor 2.5x (Mouse tracking)</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <strong>Preload sistem:</strong> <span>Automatska detekcija učitavanja</span>
+                                </div>
                             </div>
 
-                            <!-- Sekcija: Praktični primeri -->
-                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-star me-2 small text-primary"></i> 3. Režimi rada (Primeri)</h6>
+                            <h6 class="fw-bold text-dark mb-2">Primer HTML i JS koda za integraciju:</h6>
+                            <pre class="bg-light p-2 rounded small border text-dark mb-0" style="font-size: 11px;"><code>&lt;!-- HTML element --&gt;
+            &lt;div id="moj-3d-proizvod"&gt;&lt;/div&gt;
 
-                            <div class="mb-3">
-                                <label class="form-label small fw-semibold text-secondary mb-1">A) Lokalni Multiselect (Modul sam detektuje <code>multiple</code> atribut u HTML-u):</label>
-                                <pre class="bg-light p-2 rounded small border text-dark mb-0"><code>OS('#tagovi').Selects({
-                        issearch: true,
-                        odabrano: 'Izabrano tagova'
-                    });</code></pre>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label small fw-semibold text-secondary mb-1">B) Napredna AJAX pretraga (Kao Select2 sa Debounce podrškom):</label>
-                                <pre class="bg-light p-2 rounded small border text-dark mb-0"><code>OS('#korisnici').Selects({
-                        issearch: true,
-                        ajaxUrl: '/api/search.php',
-                        data: { pojam: '' }, // Server prima: ?pojam=uneseni_tekst
-                        odabrano: 'Izabrano korisnika',
-                        onSelect: function(value, text, isChecked, plugin) {
-                            console.log("Kliknut ID:", value, "Status:", isChecked);
-                        }
-                    });</code></pre>
-                            </div>
-
-                            <!-- Sekcija: Backend Format -->
-                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-server me-2 small text-primary"></i> 4. Očekivani JSON format sa servera</h6>
-                            <p class="small text-secondary mb-2">Tvoj backend skript mora da vrati čisti JSON niz objekata u jednom od sledeća dva formata:</p>
-                            <pre class="bg-light p-2 rounded small border text-dark mb-0"><code>[
-                      { "id": "1", "text": "Marko Marković" },
-                      { "id": "2", "text": "Jovan Jovanović" }
-                    ]</code></pre>
+            &lt;!-- JS Inicijalizacija --&gt;
+            OS('#moj-3d-proizvod').Product3D({
+                front: '/img/centar.jpg',
+                left: '/img/levo.jpg',
+                right: '/img/desno.jpg',
+                top: '/img/gore.jpg',
+                bottom: '/img/dole.jpg'
+            });</code></pre>
                         </div>
                     </div>
-
-                    <div class="card-body py-4">
-                        <label class="form-label fw-medium">Izaberi status pošiljke (Custom Dropdown):</label>
-                        <!-- Ovde se kači tvoj select.js plugin -->
-                        <select id="test-select" name="test-select" class="form-select">
-                            <option value="CREATED" selected="selected">CREATED - NAJAVLJENO (Čeka se roba)</option>
-                            <option value="SHIPPED">SHIPPED - POSLATO / U TRANZITU</option>
-                            <option value="ARRIVED">ARRIVED - STIGLO U MAGACIN</option>
-                            <option value="COUNTED">COUNTED - IZBROJANO I VERIFIKOVANO</option>
-                        </select>
-                    </div>
                 </div>
+            </div>
+            <!-- Inicijalizacija 3D Modula na stranici proizvoda -->
+            <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Provera da li je OpenShop framework i naš plugin uspešno učitan
+                if (typeof OS !== 'undefined' && typeof OS.prototype.Product3D === 'function') {
+
+                    // Pokretanje konačne verzije 3D prikaza nad pripremljenim HTML kontejnerom
+                    OS('#open-shop-3d-viewer').Product3D({
+
+                        front: 'krema.jpg',
+                        left: 'krema.jpg',
+                        right: 'krema.jpg',
+                        top: 'krema.jpg',
+                        bottom: 'krema.jpg',
+                        sensitivity: 20,
+                        zoomScale: 2.5,
+                        loadingText: typeof _P === 'function' ? _P('Učitavanje 3D prikaza...') : 'Učitavanje 3D prikaza...'
+                    });
+
+                } else {
+                    console.error("OpenShop Framework ili Product3D plugin nisu pronađeni na stranici.");
+                }
+            });
+            </script>
+
                 <!-- ==========================================================================
                      IMAGE PREVIEW MODUL (V2.7.2) - KOMPLETNA DOKUMENTACIJA
                      ========================================================================== -->
@@ -653,7 +763,7 @@
                                class="form-control border-start-0 ps-0 shadow-none"
                                placeholder="Izaberite datum..."
                                data-min="today"
-                               autocomplete="off" value="12/09/2026">
+                               autocomplete="off" value="12.09.2026">
                     </div>
 
                     <div id="info-datum" class="mt-2 small text-muted italic" style="display:none;">
@@ -687,8 +797,8 @@
 
                         <!-- Statični prikaz ispod slidera -->
                         <div class="os-slider-values">
-                            <span>Od: <strong id="minVal">500</strong> RSD</span>
-                            <span>Do: <strong id="maxVal">1800</strong> RSD</span>
+                            <span>Od: <strong id="minVal">500</strong> </span>
+                            <span>Do: <strong id="maxVal">1800</strong></span>
                         </div>
                     </div>
                   </div>
@@ -1570,15 +1680,14 @@ $proizvodi = $db-&gt;execute($query, $params);
   <script src="assets/js/openshop-sortable.js?v=332"></script>
   <script src="assets/js/openshop-tagsinput.js?v=332"></script>
   <script src="assets/js/openshop-validator.js?v=332"></script>
-  <script src="assets/js/openshop-datepicker.js?v=30k212"></script>
+  <script src="assets/js/openshop-datepicker.js?v=3wes"></script>
     <script src="assets/js/openshop-color-picker.js?v3332"></script>
     <script src="assets/js/openshop-grid-engine.js?v3332"></script>
-      <script src="assets/js/os.datepicker.en.js?v3332"></script>
-        <script src="assets/js/os.datepicker.sr.js?v3332"></script>
           <script src="assets/js/openshop.range.js?v33ddf32"></script>
       <script src="assets/js/openshop.slider.js?12"></script>
           <script src="assets/js/openshop-sortable.js?1ve5rtr"></script>
   <script src="assets/js/openshop-galery.js?155"></script>
+    <script src="assets/js/3d.js?155"></script>
   <style type="text/css">
 
   </style>
@@ -1730,23 +1839,26 @@ window.VERSION = '4.0';
             }
         }
     });
-  OS('#mainSlider').on('osSlider:changed', function(e) {
-      const info = e.detail; // Tvoj OS.Event pakuje podatke u .detail
-      OS('#counter-display').text((info.index + 1) + " / " + info.total);
+
+  OS('#priceSlider').OSRange({
+      step: 10,
+      suffix: ' RSD',
+
+      onChange: function(min, max) {
+          // Ažurira tekst u tvojim <strong> tagovima dok korisnik vuče
+          document.getElementById('maxVal').innerText = max.toLocaleString();
+      },
+      onAfterChange: function(min, max) {
+
+          console.log("Filtriranje započeto za opseg:", min, "-", max);
+          // Ovde možeš dodati npr. OS.loadProducts(min, max);
+      }
   });
-    OS('#priceSlider').range({
-        step: 50, // Ručice će magnetno "skakati" na svakih 50 RSD
-        suffix: ' RSD',
-        onChange: function(min, max) {
-            OS('#minVal').text(min);
-            OS('#maxVal').text(max);
-        }
-    });
     OS('#os-datum').DatePicker({
          locale: 'en',
-
+        format: 'DD.MM.YYYY',
          disablePast: true,      // Zaključava sve datume pre današnjeg
-      //  disableWeekends: true,  // Onemogućava klik na subote i nedelje
+         disableWeekends: true,  // Onemogućava klik na subote i nedelje
         onSelect: function(formatiran, datumObjekat) {
             // Callback: šta da se desi kad korisnik klikne na dan
             const infoDiv = document.getElementById('info-datum');
