@@ -91,33 +91,47 @@ OS.fn.extend({
         return this;
     },
     html: function(htmlString) {
-        if (htmlString === undefined) return this[0] ? this[0].innerHTML : '';
-        return this.each(function() {
-            if (!this) return;
+            // 1. Getter mod: ako nema stringa, vrati innerHTML prvog elementa
+            if (htmlString === undefined) return this[0] ? this[0].innerHTML : '';
 
-            // 1. Koristimo HTML5 šablon u memoriji (najbrži način za parsiranje HTML-a)
-            var template = document.createElement('template');
-            template.innerHTML = htmlString;
-            var sadrzaj = template.content;
+            return this.each(function() {
+                // PROVERA: Dozvoljavamo samo običnim elementima (nodeType 1) da primaju decu.
+                // Ovo sprečava pucanje ako je selektor npr. OS(document)
+                if (!this || this.nodeType !== 1) return;
 
-            // 2. Brutalno čistimo sve skripte i inline događaje (on*) iz tog HTML-a
-            var skripte = sadrzaj.querySelectorAll('script');
-            skripte.forEach(s => s.parentNode.removeChild(s));
+                // 2. Parsiranje kroz šablon
+                var template = document.createElement('template');
+                template.innerHTML = htmlString;
+                var sadrzaj = template.content;
 
-            var sviElementi = sadrzaj.querySelectorAll('*');
-            sviElementi.forEach(el => {
-                Array.from(el.attributes).forEach(attr => {
-                    if (attr.name.startsWith('on') || attr.value.toLowerCase().includes('javascript:')) {
-                        el.removeAttribute(attr.name);
+                // 3. Brutalno čišćenje skripti
+                var skripte = sadrzaj.querySelectorAll('script');
+                skripte.forEach(s => s.remove());
+
+                // 4. Čišćenje inline događaja (on*) i opasnih href-ova
+                var sviElementi = sadrzaj.querySelectorAll('*');
+                sviElementi.forEach(el => {
+                    var attrs = el.attributes;
+                    for (var i = attrs.length - 1; i >= 0; i--) {
+                        var attrName = attrs[i].name.toLowerCase();
+                        var attrValue = attrs[i].value.toLowerCase();
+
+                        if (attrName.startsWith('on') || attrValue.includes('javascript:')) {
+                            el.removeAttribute(attrs[i].name);
+                        }
                     }
                 });
-            });
 
-            // 3. Ubacujemo čist HTML koji i dalje ima sve tabele, slike i stilove
-            this.innerHTML = '';
-            this.appendChild(sadrzaj);
-        });
-    },
+                // 5. UBRIZGAVANJE (Fix za tvoju grešku)
+                this.innerHTML = '';
+
+                // Umesto appendChild(sadrzaj), pomeramo decu jednu po jednu iz fragmenta.
+                // DocumentFragment se automatski prazni kako decu prebacujemo u 'this'.
+                while (sadrzaj.firstChild) {
+                    this.appendChild(sadrzaj.firstChild);
+                }
+            });
+        },
     safeHtml: function(htmlString) {
         if(htmlString === undefined) return this[0] ? this[0].innerHTML : '';
         return this.each(function() { if(this) this.textContent = htmlString; });
@@ -180,16 +194,32 @@ OS.fn.extend({
 });
 // os-css.js
 OS.fn.extend({
-    css: function(prop, value) {
-        if(typeof prop === 'string' && value === undefined) {
-            return this[0] ? window.getComputedStyle(this[0])[prop] : undefined;
-        }
-        return this.each(function() {
-            if(typeof prop === 'object') {
-                for (var key in prop) this.style[key] = prop[key];
-            } else { this.style[prop] = value; }
-        });
-    },
+  css: function(prop, value) {
+          // 1. GETTER: OS(el).css('background')
+          if (typeof prop === 'string' && value === undefined) {
+              // Proveravamo da li prvi element postoji i da li je tipa Element (1)
+              if (!this[0] || this[0].nodeType !== 1) return undefined;
+              return window.getComputedStyle(this[0])[prop];
+          }
+
+          // 2. SETTER: OS(el).css('color', 'red') ili OS(el).css({color: 'red'})
+          return this.each(function() {
+              // KLJUČNI FIX: Dozvoljavamo rad samo ako element ima .style property
+              if (!this || this.nodeType !== 1 || !this.style) return;
+
+              if (typeof prop === 'object') {
+                  // Masovno postavljanje stilova preko objekta
+                  for (var key in prop) {
+                      if (prop.hasOwnProperty(key)) {
+                          this.style[key] = prop[key];
+                      }
+                  }
+              } else {
+                  // Pojedinačno postavljanje stila
+                  this.style[prop] = value;
+              }
+          });
+      },
     addClass: function(c) {
         if(!c) return this;
         var cls = c.split(/\s+/).filter(Boolean);

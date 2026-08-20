@@ -34,7 +34,38 @@
         if (!this.rawEl || !this.config.front) return;
         this.init();
     }
+    Product3D.prototype.destroy = function() {
+        console.log("[Product3D] Pokrećem čišćenje resursa i oslobađanje RAM memorije...");
 
+        // 1. Zaustavi autoplay ako je bioskopski mod ostao upaljen
+        if (this.loopInterval) {
+            clearInterval(this.loopInterval);
+        }
+
+        // 2. Skidanje Event Listenera sa krovnog omotača (odveži sve što je bindEvents zakačio)
+        let wrapper = this.rawEl.querySelector('.os-3d-wrapper');
+        if (wrapper) {
+            // Kreiranjem novog klona bez događaja i zamenom starog, najsigurnije čistimo memoriju
+            let cleanWrapper = wrapper.cloneNode(true);
+            wrapper.parentNode.replaceChild(cleanWrapper, wrapper);
+        }
+
+        // 3. Oslobađanje referenci nad slikama da proradi Garbage Collector
+        for (let key in this.images) {
+            if (this.images.hasOwnProperty(key)) {
+                this.images[key].onload = null;
+                this.images[key].onerror = null;
+                this.images[key] = null;
+            }
+        }
+        this.images = {};
+        this.hud = null;
+
+        // 4. Potpuno pražnjenje HTML-a unutar glavnog kontejnera
+        this.rawEl.innerHTML = '';
+
+        console.log("[Product3D] Memorijski štit uspešno aktiviran. Kontejner je čist.");
+    };
     Product3D.prototype.init = function() {
         let self = this;
 
