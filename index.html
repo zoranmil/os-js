@@ -19,6 +19,10 @@
     <link rel="stylesheet" href="assets/css/openshop-datepicker.css?v=04221">
     <link rel="stylesheet" href="assets/css/openshop-sortable.css?v=14221">
       <link rel="stylesheet" href="assets/css/openshop-galery.css?v=37">
+
+      <link rel="stylesheet" href="assets/css/openshop.range.css?v=32w">
+      <link rel="stylesheet" href="assets/css/openshop.slider.css?v=1s5rr">
+      <link rel="stylesheet" href="assets/css/3d-smart.css?v=125rr">
     <style>
         /**
          * OPENSHOP UI - BRANDING & CORE STYLES
@@ -103,8 +107,6 @@
 
 
     </style>
-    <link rel="stylesheet" href="assets/css/openshop.range.css?v=2321">
-    <link rel="stylesheet" href="assets/css/openshop.slider.css?v=1s5rr">
 </head>
 <body >
 
@@ -328,7 +330,7 @@
             <!-- 2. Test za Product 3D Modul -->
             <div class="card mb-4 border-0 shadow-sm">
                 <div class="card-header py-3 bg-white text-secondary fw-semibold border-bottom">
-                    <i class="fa-solid fa-cube me-2 text-primary"></i> 2.  - PRODUCT 3D INTERACTIVE VIEWER v1.5.1
+                    <i class="fa-solid fa-cube me-2 text-primary"></i> 2.  - PRODUCT 3D INTERACTIVE VIEWER v2.7
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -336,54 +338,69 @@
                         <!-- Leva kolona: Interaktivni 3D Render Proizvoda -->
                         <div class="col-md-12 text-center mb-4 mb-md-0">
                             <h5 class="card-title text-dark mb-3 fw-bold text-start">3D Preview</h5>
+  <style>
+  /**
+   * OPENSHOP FRAMEWORK - 3DSmartGalery Master CSS
+   * Integrisani stilovi za 2D/3D Hybrid, Cinematic efekte i Navigaciju
+   */
+
+  </style>
+
 
                             <div class="col-lg-6 mx-auto text-center py-5">
 
-                              <div id="product-3d-cinema"></div>
-
-                              <!-- D-PAD KONTROLE -->
-                              <div class="mt-4">
-                                  <div class="btn-group shadow rounded-pill bg-white p-2">
-                                    <button class="btn btn-link text-dark fw-bold" onclick="my3d.setView('left')">
-                                        <i class="fa-solid fa-chevron-left"></i>
-                                    </button>
-                             <button class="btn btn-link text-dark" onclick="my3d.setView('top')"><i class="fa-solid fa-chevron-up"></i></button>
-
-                                      <button class="btn btn-warning rounded-circle shadow mx-2" style="width:60px; height:60px; color:#fff" onclick="my3d.playMovie(this)">
-                                          <i class="fa-solid fa-play"></i>
-                                      </button>
-
-                                      <button class="btn btn-link text-dark" onclick="my3d.setView('bottom')"><i class="fa-solid fa-chevron-down"></i></button>
-                                      <button class="btn btn-link text-dark" onclick="my3d.setView('right')"><i class="fa-solid fa-chevron-right"></i></button>
-                                  </div>
+                              <div data-3d-smart="1"
+                                   data-items='[
+                                      {
+                                          "is3d": 0,
+                                          "org": "krema.jpg",
+                                          "popup": "krema.jpg"
+                                      },
+                                      {
+                                          "is3d": 1,
+                                          "front": "front.png",
+                                          "left": "left.png",
+                                          "right": "right.png",
+                                          "top": "top.png",
+                                          "bottom": "bottom.png",
+                                          "viewNames": {
+                                              "front": "<span style=\"color: #FFF; text-shadow: 2px 2px 4px blue; font-weight: bold;\">POGLED SPREDA</span>",
+                                              "left": "<span class=\"badge bg-danger\">EXCLUSIVE</span> SIDE PROFILE",
+                                              "right": "<i class=\"fa fa-star\" style=\"color:#dc3545\"></i> PREMIUM RIGHT",
+                                              "top": "<b>AERODYNAMICS</b> <small>(V2.0)</small>",
+                                              "bottom": "STURDY <span style=\"color:#dc3545\">BASE</span>"
+                                          }
+                                      },
+                                      {
+                                          "is3d": 0,
+                                          "org": "urlovi.png",
+                                            "popup": "urlovi.png"
+                                      }
+                                      ,
+                                      {
+                                          "is3d": 0,
+                                          "org": "urlovi.png",
+                                            "popup": "urlovi.png"
+                                      },
+                                      {
+                                          "is3d": 0,
+                                          "org": "urlovi.png",
+                                            "popup": "urlovi.png"
+                                      },
+                                      {
+                                          "is3d": 0,
+                                          "org": "krema.jpg",
+                                          "popup": "krema.jpg"
+                                      }
+                                      ,
+                                      {
+                                          "is3d": 0,
+                                          "org": "urlovi.png",
+                                          "popup": "krema.jpg"
+                                      }
+                                   ]'>
                               </div>
                           </div>
-
-                          <script>
-                              window.my3d = null;
-                              document.addEventListener("DOMContentLoaded", function() {
-                                  const elements = OS('#product-3d-cinema').Product3D({
-                                      front: 'front.png',
-                                      left: 'left.png',
-                                      right: 'desno.png',
-                                      top: 'top.png',
-                                      bottom: 'bottom.png',
-                                      transitionEffect: 'none', // PROMENI OVDE: blur, flash, glitch, ili tilt , none
-                                      autoPlaySpeed: 2000,
-                                      viewNames: {
-                                          front: '<span style="color: #000; text-shadow: 2px 2px 4px #000; font-weight: bold;">POGLED SPREDA</span>',
-                                          left: '<span class="badge bg-warning text-dark">BOČNI PROFIL</span>', // Primer sa Bootstrap bedžom
-                                          right: '<div style="color:  #000; border-left: 3px solid #fb923c; padding-left: 10px;">DESNI PROFIL</div>',
-                                          top: '<b style="color: red;">GORNJA STRANA</b>',
-                                          bottom: '<i style="color:  #000;">DONJA STRANA</i>'
-                                      }
-                                  });
-                                  if (elements && elements[0]) {
-                                      window.my3d = elements[0].os3dInstance;
-                                  }
-                              });
-
-                          </script>
 
 
 
@@ -408,20 +425,52 @@
                                     <strong>Preload sistem:</strong> <span>Automatska detekcija učitavanja</span>
                                 </div>
                             </div>
+                            <style>
+                            /* --- CINEMA FX ENGINE --- */
 
-                            <h6 class="fw-bold text-dark mb-2">Primer HTML i JS koda za integraciju:</h6>
-                            <pre class="bg-light p-2 rounded small border text-dark mb-0" style="font-size: 11px;"><code>&lt;!-- HTML element --&gt;
-            &lt;div id="moj-3d-proizvod"&gt;&lt;/div&gt;
+                            </style>
 
-            &lt;!-- JS Inicijalizacija --&gt;
-            OS('#moj-3d-proizvod').Product3D({
-                front: '/img/centar.jpg',
-                left: '/img/levo.jpg',
-                right: '/img/desno.jpg',
-                top: '/img/gore.jpg',
-                bottom: '/img/dole.jpg'
-            });</code></pre>
-                        </div>
+                              <div class="mt-4">
+        <h6 class="fw-bold text-dark mb-2">Primer hibridne 2D/3D integracije (v2.7):</h6>
+        <div class="description small text-muted mb-3">
+            Ovaj modul podržava hibridni prikaz statičnih slika i 3D modela unutar jedne galerije.
+            Podaci se definišu kroz <code>data-items</code> JSON niz, a svaka varijanta može biti 2D (slika) ili 3D (set od 5 slika).
+        </div>
+
+        <pre class="bg-light p-3 rounded small border text-dark mb-0" style="font-size: 11px; line-height: 1.6;"><code>&lt;!-- 1. HTML Konstrukcija sa JSON podacima --&gt;
+    &lt;div data-3d-smart="1"
+         data-items='[
+            { "is3d": 0, "org": "/img/klasik.jpg", "popap": "/img/velika.jpg" },
+            {
+              "is3d": 1,
+              "front": "/img/3d-front.jpg",
+              "left": "/img/3d-left.jpg",
+              "right": "/img/3d-right.jpg",
+              "top": "/img/3d-top.jpg",
+              "bottom": "/img/3d-bottom.jpg",
+              "viewNames": { "front": "&lt;b&gt;GOLD&lt;/b&gt; EDITION" }
+            }
+         ]'&gt;&lt;/div&gt;
+
+    &lt;!-- 2. JS Inicijalizacija sa konfiguracijom --&gt;
+    &lt;script&gt;
+        OS('[data-3d-smart="1"]').Init3DSmartGalery({
+            transitionEffect: 'blur', // Moguće: none, blur, flash, glitch, tilt
+            autoPlaySpeed: 2000,      // Brzina rotacije u ms
+            autoplay: true,           // Automatski start 3D plejera
+            arrowsType: 1             // 1 = Strelice na thumbovima, 2 = Na glavnoj slici
+        });
+    &lt;/script&gt;</code></pre>
+
+        <div class="mt-3">
+            <h6 class="fw-bold text-dark mb-2" style="font-size: 13px;">Dostupne API metode (za developere):</h6>
+            <ul class="text-muted" style="font-size: 11px;">
+                <li><code>instance.destroy()</code> - Potpuno uklanjanje instance i oslobađanje RAM memorije.</li>
+                <li><code>instance.reinit(newItems, newConfig)</code> - Osvežavanje galerije sa novim podacima (npr. kod promene boje).</li>
+                <li><code>instance.switchView(index)</code> - Programsko prebacivanje na određeni thumb.</li>
+            </ul>
+        </div>
+    </div>
                     </div>
                 </div>
             </div>
@@ -788,7 +837,7 @@
                   <div class="card-body pt-0">
                     <div class="os-slider-wrapper">
                         <!-- Slider sa parametrima -->
-                        <div class="os-slider-container" id="priceSlider" data-min="0" data-max="2500" data-start-min="500" data-start-max="1800">
+                        <div class="os-slider-container" id="priceSlider" data-min="0" data-max="2500" data-start-min="0" data-start-max="2500">
                             <div class="os-slider-track">
                                 <div class="os-slider-range"></div>
                             </div>
@@ -1679,7 +1728,8 @@ $proizvodi = $db-&gt;execute($query, $params);
 
     <!-- 2. Tvoj osnovni framework (Zamena za jQuery) -->
     <script src="assets/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/os.js?v=45"></script>
+    <script src="assets/js/os.js?v=421"></script>
+        <script src="assets/js/3d-smart.js?t234"></script>
   <!-- Tvoji integrisani OpenShop plugini -->
   <script src="assets/js/select.js?v=kla"></script>
   <script src="assets/js/image-preview.js?v=25a"></script>
@@ -1694,11 +1744,14 @@ $proizvodi = $db-&gt;execute($query, $params);
       <script src="assets/js/openshop.slider.js?1a2"></script>
           <script src="assets/js/openshop-sortable.js?1vae5rtr"></script>
   <script src="assets/js/openshop-galery.js?15a5"></script>
-    <script src="assets/js/3d.js?15"></script>
+    <script src="assets/js/os-product-swiper.js?15a5"></script>
   <style type="text/css">
 
   </style>
+
+
   <script>
+
   window.DEMO=true ;
   window.base_path = ''; // Ili npr. '/novshop/'
 window.ADMIN_PAGE = 'admin';
@@ -1707,8 +1760,16 @@ window.VERSION = '4.0';
       var prevodi = { 'Select': 'Izaberi', 'Upload': 'Prebaci' };
       return prevodi[key] || key;
   };
+  OS(function() {
 
-
+    OS('[data-3d-smart="1"]').Init3DSmartGalery({
+        transitionEffect: 'none', // blur, flash, glitch, tilt, ili 'none' je default
+        autoPlaySpeed: 2000,
+        autoplay: false,
+        loop:false,
+        arrowsType: 1 // 1 za strelice na thumbovima, 2 za strelice na slici
+    });
+  });
  window.OSSliderScenes = {
     // --- SCENE (Ulaz elemenata unutar aktivnog slajda) ---
 
@@ -1837,7 +1898,7 @@ window.VERSION = '4.0';
     OS('#mainSlider').Slider({
         delay: 8000,
         onMove: function(data) {
-            console.log("Slajder se pomerio na indeks: " + data.index);
+          ///  console.log("Slajder se pomerio na indeks: " + data.index);
             // Npr. promeni boju menija na slajdu broj 2
             if (data.index === 1) {
                 OS('.header').addClass('dark-mode');
@@ -1848,12 +1909,13 @@ window.VERSION = '4.0';
     });
 
   OS('#priceSlider').OSRange({
-      step: 10,
+      step: 100,
       suffix: ' RSD',
 
       onChange: function(min, max) {
           // Ažurira tekst u tvojim <strong> tagovima dok korisnik vuče
-          document.getElementById('maxVal').innerText = max.toLocaleString();
+          OS('#minVal').html(min.toLocaleString());
+            OS('#maxVal').html( max.toLocaleString());
       },
       onAfterChange: function(min, max) {
 
@@ -1862,7 +1924,7 @@ window.VERSION = '4.0';
       }
   });
     OS('#os-datum').DatePicker({
-         locale: 'en',
+         locale: 'sr',
         format: 'DD.MM.YYYY',
          disablePast: true,      // Zaključava sve datume pre današnjeg
          disableWeekends: true,  // Onemogućava klik na subote i nedelje
