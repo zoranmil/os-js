@@ -121,3 +121,222 @@
     55% { opacity: 0; }
     100% { opacity: 1; }
 }
+
+/* * Panorama /
+/* 3D PANORAMA ENGINE - FIKSIRANO ZA SLIKE 320x320px */
+/* OPTIMIZACIJA SCENE ZA SLIKE VISOKE REZOLUCIJE (1280x640) */
+.os-panorama-stage {
+width: 420px; height: 320px; margin: 0 auto; overflow: hidden; position: relative; background: #000;
+}
+.os-panorama-canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-size: auto 100%; /* Visina se fiksira na 100% prozora, a širina se razvlači proporcionalno */
+    background-position: 0px center;
+    background-repeat: repeat-x; /* Omogućava beskonačno vrtenje u krug bez prestanka */
+}
+
+
+.os-cube {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: translateZ(0px);
+    transition: transform 0.1s ease-out;
+}
+.os-cube-face {
+    position: absolute;
+    width: 320px;       /* Svaka strana mora biti tačno 320px */
+    height: 320px;
+    top: 0;
+    left: 0;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    backface-visibility: visible;
+}
+
+/* MATEMATIKA ZA 320px: translateZ je tačno polovina (160px) */
+/* Koristimo minus (-) kako bismo sliku okrenuli ka unutra, prema kupcu */
+.face-front  { transform: rotateY(0deg) translateZ(-160px); }
+.face-right  { transform: rotateY(-90deg) translateZ(-160px); }
+.face-back   { transform: rotateY(180deg) translateZ(-160px); }
+.face-left   { transform: rotateY(90deg) translateZ(-160px); }
+.face-top    { transform: rotateX(-90deg) translateZ(-160px); }
+.face-bottom { transform: rotateX(90deg) translateZ(-160px); }
+
+.os-specifikacije-top-meni {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 6px 12px;
+    border-radius: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(4px);
+
+    /* POČETNO STANJE - SKRIVENO ZA FADE EFFECT */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* KLASA KOJA AKTIVIRA FADE-IN */
+.os-specifikacije-top-meni.is-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.os-spec-top-btn {
+    background: #fff;
+    color: #333;
+    border: 1px solid #e5e7eb;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.os-spec-top-btn:hover {
+    background: #fb923c;
+    color: #fff;
+    border-color: #fb923c;
+}
+/* STILIZACIJA POPUP TEKSTA SPECIFIKACIJE */
+.os-tekstualna-specifikacija {
+    background: rgba(255, 255, 255, 0.08); /* Suptilna tamna staklena kartica */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 30px 40px !important;
+    border-radius: 16px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important; /* Zamena za običan monospace */
+    font-size: 18px !important;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 450px;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px); /* Zamuti pozadinu iza kartice */
+
+    /* Glatka animacija pojavljivanja samog teksta */
+    animation: osPopupTextFadeIn 0.4s ease-out forwards;
+}
+
+/* Isticanje HTML tagova unutar opisa (poput tvog <b> elementa za Premium kožu) */
+.os-tekstualna-specifikacija b,
+.os-tekstualna-specifikacija strong {
+    color: #fb923c; /* Tvoja prepoznatljiva narandžasta boja brenda */
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Animacija za ulazak teksta */
+@keyframes osPopupTextFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+.os-tekstualna-specifikacija {
+    background: rgba(20, 20, 20, 0.65); /* Elegantna tamna glassmorphic pozadina */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 35px 40px !important;
+    border-radius: 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    width: 100%;
+    min-width: 320px;
+    max-width: 500px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    animation: osPopupTextFadeIn 0.35s cubic-bezier(0.15, 1, 0.3, 1) forwards;
+}
+
+/* Stil za glavno dugme na vrhu slike */
+.os-detalji-glavni-btn {
+    background: #fff;
+    color: #111;
+    border: 1px solid #e5e7eb;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: all 0.2s ease-in-out;
+}
+
+.os-detalji-glavni-btn:hover {
+    background: #fb923c;
+    color: #fff;
+    border-color: #fb923c;
+    transform: translateY(-1px);
+}
+
+
+
+/* Osnovni kontejner tačke */
+.os-hotspot-tacka {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #fb923c; /* Prati narandžastu boju brenda */
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 105;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transform: translate(-50%, -50%); /* Centriranje tačke tačno na koordinatu */
+    transition: transform 0.2s ease;
+}
+
+.os-hotspot-tacka:hover {
+    transform: translate(-50%, -50%) scale(1.3);
+    background: #fff;
+    border-color: #fb923c;
+}
+
+/* Pulsirajući talas oko tačke */
+.os-hotspot-pulse {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fb923c;
+    border-radius: 50%;
+    animation: osHotspotWavve 1.8s infinite ease-out;
+    pointer-events: none; /* Da talas ne smeta kliku */
+}
+
+@keyframes osHotspotWavve {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2.8);
+        opacity: 0;
+    }
+}
+/* Ako se unutar glavne bine nalazi bar jedna hotspot tačka, promeni kursor slike u običnu strelicu */
+.os-main-stage:has(.os-hotspot-tacka) .os-2d-static {
+    cursor: default !important;
+}
+
+/* Na samoj pulsirajućoj tački i njenom talasu kursor je UVEK ruka za klik */
+.os-hotspot-tacka,
+.os-hotspot-tacka * {
+    cursor: pointer !important;
+}
