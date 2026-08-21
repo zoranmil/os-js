@@ -348,22 +348,60 @@
 
 
                             <div class="col-lg-6 mx-auto text-center py-5">
-
                               <div data-3d-smart="1"
                                    data-items='[
                                    {
                                      "is3d": 0,
-                                     "org": "krema.jpg",
-                                     "popup": "krema.jpg"
+                                     "isPanorama": 0,
+                                     "org": "img/product/krema.jpg",
+                                     "popup": "img/product/krema.jpg",
+                                     "naslov": "Detalji proizvoda",
+                                     "popapnaslov": "Tehničke Specifikacije",
+                                     "opisi": {
+                                       "Masa": "Težina torbe je 650g, idealna za svakodnevno nošenje.",
+                                       "Dimenzije": "Dimenzije: 24cm x 20cm x 8cm (Širina x Visina x Dubina).",
+                                       "Materijal": "<b>Premium teleća koža</b> sa elementima reljefne svinjske kože unutra.",
+                                       "Garancija": "2 godine",
+                                       "Zemlja porekla": "Italija"
+                                     },
+                                     "hotspots": [
+                                       {
+                                         "top": "69%",
+                                         "left": "68%",
+                                         "naslov": "Kopča",
+                                         "tekst": "Izrađena od visokokvalitetne legure cinka sa mat zlatnim premazom otpornim na ogrebotine."
+                                       },
+                                       {
+                                         "top": "25%",
+                                         "left": "30%",
+                                         "naslov": "Konstrukcija kaiša",
+                                         "tekst": "Ojačani kožni kaiš sa duplim štepom za maksimalnu izdržljivost tokom nošenja."
+                                       }
+                                     ]
+                                   },
+                                   {
+                                     "is3d": 0,
+                                     "isPanorama": 1,
+                                     "org": "img/product/krema.jpg",
+                                     "panorama": {
+                                        "panType": 1,
+                                        "front": "img/3d/pz.png",
+                                        "right": "img/3d/px.png",
+                                        "back": "img/3d/nz.png",
+                                        "left": "img/3d/nx.png",
+                                        "top": "img/3d/py.png",
+                                        "bottom": "img/3d/ny.png"
+                                     }
                                    },
                                    {
                                      "is3d": 1,
+                                     "isPanorama": 0,
                                      "frames": [
-                                        "front.png",
-                                        "left.png",
-                                        "top.png",
-                                        "right.png",
-                                        "bottom.png"
+                                        "img/panorama/front.png",
+                                        "img/panorama/left.png",
+                                        "img/panorama/top.png",
+                                        "img/panorama/right.png",
+                                        "img/panorama/bottom.png"
                                      ],
                                      "viewNames": {
                                         "0": "<span style=\"color: #FFF; text-shadow: 2px 2px 4px blue; font-weight: bold;\">POGLED SPREDA</span>",
@@ -372,9 +410,23 @@
                                         "3": "<i class=\"fa fa-star\" style=\"color:#dc3545\"></i> DESNA STRANA",
                                         "4": "DONJA STRANA <span style=\"color:#dc3545\">BAZA</span>"
                                      }
+                                   },
+                                   {
+                                     "is3d": 0,
+                                     "org": "img/product/krema.jpg",
+                                     "isPanorama": 1,
+                                     "panorama": {
+                                        "panType": 2,
+                                        "file": "img/2d/panorama.jpg"
+                                     }
                                    }
                               ]'>
                               </div>
+
+
+
+
+
                           </div>
 
 
@@ -412,30 +464,80 @@
             Podaci se definišu kroz <code>data-items</code> JSON niz, a svaka varijanta može biti 2D (slika) ili 3D (set od 5 slika).
         </div>
 
-        <pre class="bg-light p-3 rounded small border text-dark mb-0" style="font-size: 11px; line-height: 1.6;"><code>&lt;!-- 1. HTML Konstrukcija sa JSON podacima --&gt;
-    &lt;div data-3d-smart="1"
-         data-items='[
-            { "is3d": 0, "org": "/img/klasik.jpg", "popap": "/img/velika.jpg" },
-            {
-              "is3d": 1,
-              "front": "/img/3d-front.jpg",
-              "left": "/img/3d-left.jpg",
-              "right": "/img/3d-right.jpg",
-              "top": "/img/3d-top.jpg",
-              "bottom": "/img/3d-bottom.jpg",
-              "viewNames": { "front": "&lt;b&gt;GOLD&lt;/b&gt; EDITION" }
-            }
-         ]'&gt;&lt;/div&gt;
-
-    &lt;!-- 2. JS Inicijalizacija sa konfiguracijom --&gt;
-    &lt;script&gt;
-        OS('[data-3d-smart="1"]').Init3DSmartGalery({
-            transitionEffect: 'blur', // Moguće: none, blur, flash, glitch, tilt
-            autoPlaySpeed: 2000,      // Brzina rotacije u ms
-            autoplay: true,           // Automatski start 3D plejera
-            arrowsType: 1             // 1 = Strelice na thumbovima, 2 = Na glavnoj slici
-        });
-    &lt;/script&gt;</code></pre>
+        <pre class="bg-light p-3 rounded small border text-dark mb-0" style="font-size: 11px; line-height: 1.6;"><code>&lt;div data-3d-smart="1"
+             data-items='[
+                 {
+                     "is3d": 0,
+                     "isPanorama": 0,
+                     "org": "img/product/krema.jpg",
+                     "popup": "img/product/krema.jpg",
+                     "naslov": "Detalji proizvoda",
+                     "popapnaslov": "Tehničke Specifikacije",
+                     "opisi": {
+                         "Masa": "Težina torbe je 650g, idealna za svakodnevno nošenje.",
+                         "Dimenzije": "Dimenzije: 24cm x 20cm x 8cm (Širina x Visina x Dubina).",
+                         "Materijal": "&lt;b&gt;Premium teleća koža&lt;/b&gt; sa elementima reljefne svinjske kože unutra.",
+                         "Garancija": "2 godine",
+                         "Zemlja porekla": "Italija"
+                     },
+                     "hotspots": [
+                         {
+                             "top": "69%",
+                             "left": "68%",
+                             "naslov": "Kopča",
+                             "tekst": "Izrađena od visokokvalitetne legure cinka sa mat zlatnim premazom otpornim na ogrebotine."
+                         },
+                         {
+                             "top": "25%",
+                             "left": "30%",
+                             "naslov": "Konstrukcija kaiša",
+                             "tekst": "Ojačani kožni kaiš sa duplim štepom za maksimalnu izdržljivost tokom nošenja."
+                         }
+                     ]
+                 },
+                 {
+                     "is3d": 0,
+                     "isPanorama": 1,
+                     "org": "img/product/krema.jpg",
+                     "panorama": {
+                         "panType": 1,
+                         "front": "img/3d/pz.png",
+                         "right": "img/3d/px.png",
+                         "back": "img/3d/nz.png",
+                         "left": "img/3d/nx.png",
+                         "top": "img/3d/py.png",
+                         "bottom": "img/3d/ny.png"
+                     }
+                 },
+                 {
+                     "is3d": 1,
+                     "isPanorama": 0,
+                     "frames": [
+                         "img/panorama/front.png",
+                         "img/panorama/left.png",
+                         "img/panorama/top.png",
+                         "img/panorama/right.png",
+                         "img/panorama/bottom.png"
+                     ],
+                     "viewNames": {
+                         "0": "&lt;span style=\"color: #FFF; text-shadow: 2px 2px 4px blue; font-weight: bold;\"&gt;POGLED SPREDA&lt;/span&gt;",
+                         "1": "&lt;span class=\"badge bg-danger\"&gt;EXCLUSIVE&lt;/span&gt; BOČNI PROFIL",
+                         "2": "&lt;b&gt;AERODINAMIKA&lt;/b&gt; &lt;small&gt;(GORNJI DEO)&lt;/small&gt;",
+                         "3": "&lt;i class=\"fa fa-star\" style=\"color:#dc3545\"&gt;&lt;/i&gt; DESNA STRANA",
+                         "4": "DONJA STRANA &lt;span style=\"color:#dc3545\"&gt;BAZA&lt;/span&gt;"
+                     }
+                 },
+                 {
+                     "is3d": 0,
+                     "org": "img/product/krema.jpg",
+                     "isPanorama": 1,
+                     "panorama": {
+                         "panType": 2,
+                         "file": "img/2d/panorama.jpg"
+                     }
+                 }
+             ]'&gt;
+        &lt;/div&gt;</code></pre>
 
         <div class="mt-3">
             <h6 class="fw-bold text-dark mb-2" style="font-size: 13px;">Dostupne API metode (za developere):</h6>
