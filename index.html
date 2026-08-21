@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="sr">
 <head>
     <meta charset="UTF-8">
@@ -351,54 +351,29 @@
 
                               <div data-3d-smart="1"
                                    data-items='[
-                                      {
-                                          "is3d": 0,
-                                          "org": "krema.jpg",
-                                          "popup": "krema.jpg"
-                                      },
-                                      {
-                                          "is3d": 1,
-                                          "front": "front.png",
-                                          "left": "left.png",
-                                          "right": "right.png",
-                                          "top": "top.png",
-                                          "bottom": "bottom.png",
-                                          "viewNames": {
-                                              "front": "<span style=\"color: #FFF; text-shadow: 2px 2px 4px blue; font-weight: bold;\">POGLED SPREDA</span>",
-                                              "left": "<span class=\"badge bg-danger\">EXCLUSIVE</span> SIDE PROFILE",
-                                              "right": "<i class=\"fa fa-star\" style=\"color:#dc3545\"></i> PREMIUM RIGHT",
-                                              "top": "<b>AERODYNAMICS</b> <small>(V2.0)</small>",
-                                              "bottom": "STURDY <span style=\"color:#dc3545\">BASE</span>"
-                                          }
-                                      },
-                                      {
-                                          "is3d": 0,
-                                          "org": "urlovi.png",
-                                            "popup": "urlovi.png"
-                                      }
-                                      ,
-                                      {
-                                          "is3d": 0,
-                                          "org": "urlovi.png",
-                                            "popup": "urlovi.png"
-                                      },
-                                      {
-                                          "is3d": 0,
-                                          "org": "urlovi.png",
-                                            "popup": "urlovi.png"
-                                      },
-                                      {
-                                          "is3d": 0,
-                                          "org": "krema.jpg",
-                                          "popup": "krema.jpg"
-                                      }
-                                      ,
-                                      {
-                                          "is3d": 0,
-                                          "org": "urlovi.png",
-                                          "popup": "krema.jpg"
-                                      }
-                                   ]'>
+                                   {
+                                     "is3d": 0,
+                                     "org": "krema.jpg",
+                                     "popup": "krema.jpg"
+                                   },
+                                   {
+                                     "is3d": 1,
+                                     "frames": [
+                                        "front.png",
+                                        "left.png",
+                                        "top.png",
+                                        "right.png",
+                                        "bottom.png"
+                                     ],
+                                     "viewNames": {
+                                        "0": "<span style=\"color: #FFF; text-shadow: 2px 2px 4px blue; font-weight: bold;\">POGLED SPREDA</span>",
+                                        "1": "<span class=\"badge bg-danger\">EXCLUSIVE</span> BOČNI PROFIL",
+                                        "2": "<b>AERODINAMIKA</b> <small>(GORNJI DEO)</small>",
+                                        "3": "<i class=\"fa fa-star\" style=\"color:#dc3545\"></i> DESNA STRANA",
+                                        "4": "DONJA STRANA <span style=\"color:#dc3545\">BAZA</span>"
+                                     }
+                                   }
+                              ]'>
                               </div>
                           </div>
 
@@ -1762,14 +1737,13 @@ window.VERSION = '4.0';
   };
   OS(function() {
 
-    OS('[data-3d-smart="1"]').Init3DSmartGalery({
-        transitionEffect: 'none', // blur, flash, glitch, tilt, ili 'none' je default
-        autoPlaySpeed: 2000,
-        autoplay: false,
-        loop:false,
-        arrowsType: 1 // 1 za strelice na thumbovima, 2 za strelice na slici
-    });
-  });
+
+ OS('[data-3d-smart="1"]').Init360InfinityViewer({
+  transitionEffect: 'none',
+ autoPlaySpeed: 2000, // Brzina kruga u milisekundama kada se klikne Play
+ arrowsType: 2
+ });
+});
  window.OSSliderScenes = {
     // --- SCENE (Ulaz elemenata unutar aktivnog slajda) ---
 
