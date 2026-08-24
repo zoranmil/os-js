@@ -1771,37 +1771,120 @@ $proizvodi = $db-&gt;execute($query, $params);
 
     </div>
 </div>
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white fw-bold">
+        <i class="os-icon os-icon-settings text-primary me-2"></i><h3>7.e OPENSHOP UNIVERSAL CHARTS v1.4.2 - HTML DOKUMENTACIJA</h3>
+    </div>
+    <div class="card-body">
+
+        <!-- Zlatno pravilo -->
+        <div class="alert alert-info border-0 shadow-sm mb-4" style="background-color: #e0f2fe; color: #0369a1;">
+            <strong>Zlatno pravilo vizuelizacije:</strong> Svaki grafikon mora imati definisan jedinstveni <code>id</code> atribut na kontejneru. Na osnovu tog ID-ja vrši se inicijalizacija i mapiranje 3D geometrije, procenata i kontrolne table unutar JavaScript poziva.
+        </div>
+
+        <!-- Sekcija A -->
+        <h5 class="fw-bold mb-3">A) Standardni HTML Kontejner</h5>
+        <p class="text-muted small">Koristi se za definisanje prostora u šablonu gde će engine generisati elemente. Visina i maksimalna širina se kontrolišu direktno kroz inline stilove ili klase.</p>
+        <div class="bg-light p-3 rounded mb-4" style="border-left: 4px solid #8b5cf6;">
+            <pre class="m-0" style="white-space: pre-wrap; font-size: 13px;"><code>&lt;div id="statistika-prodaje" style="width: 100%; max-width: 600px;"&gt;&lt;/div&gt;</code></pre>
+        </div>
+
+        <!-- Sekcija B -->
+        <h5 class="fw-bold mb-3">B) Dinamičko Inicijalizovanje (PHP + MySQL + JSON)</h5>
+        <p class="text-muted small">Najsigurniji metod za povlačenje podataka iz baze. PHP vrši grupisanje podataka, a funkcija <code>json_encode()</code> automatski priprema nizove u formatu koji JavaScript savršeno razume bez potrebe za ručnim parsiranjem.</p>
+        <div class="bg-light p-3 rounded mb-4" style="border-left: 4px solid #3b82f6;">
+            <pre class="m-0" style="white-space: pre-wrap; font-size: 13px;"><code>&lt;?php
+// 1. Priprema i izvršavanje MySQL upita (Primer za grupisanje po mesecima)
+$upit = $db-&gt;prepare("SELECT MONTHNAME(datum_kreiranja) as mesec, COUNT(id) as ukupno FROM porudzbine GROUP BY MONTH(datum_kreiranja) LIMIT 3");
+$upit-&gt;execute();
+$rezultati = $upit-&gt;fetchAll(PDO::FETCH_ASSOC);
+
+// 2. Razdvajanje u čiste nizove za grafikon
+$php_labels = [];
+$php_data = [];
+
+foreach($rezultati as $red) {
+    $php_labels[] = $red['mesec']; // Npr. ['Jan', 'Feb', 'Mar']
+    $php_data[] = (int)$red['ukupno']; // Npr. [45, 25, 80]
+}
+?&gt;
+
+&lt;script&gt;
+// 3. Inicijalizacija grafikona sa dinamičkim podacima
+OS('#statistika-prodaje').Chart({
+    type: 'pie',
+    height: 300,
+    labels: &lt;?php echo json_encode($php_labels); ?&gt;,
+    datasets: [{
+        label: 'Broj porudžbina',
+        data: &lt;?php echo json_encode($php_data); ?&gt;,
+        color: '#8b5cf6'
+    }],
+    options: {
+        animated: true,
+        tooltips: true,
+        legend: true,
+        is3D: true,   // Uključuje isometrijski nagib i elipsu
+        depth: 15     // Debljina 3D prstena u pikselima
+    }
+});
+&lt;/script&gt;</code></pre>
+        </div>
+
+        <!-- Sekcija C -->
+        <h5 class="fw-bold mb-3">C) Automatske Eksport Komponente (PNG, Excel & PDF)</h5>
+        <p class="text-muted small">Primenjuju se automatski na dnu svakog grafikona. Engine samostalno generiše interaktivnu kontrolnu tablu sa tri dugmeta i vezuje događaje za obradu podataka.</p>
+        <div class="bg-light p-3 rounded mb-4" style="border-left: 4px solid #10b981;">
+            <pre class="m-0" style="white-space: pre-wrap; font-size: 13px;"><code>&lt;!-- Automatska struktura koju engine ubacuje na dno kontejnera --&gt;
+&lt;div class="os-chart-export-panel"&gt;
+    &lt;button class="os-export-btn btn-png"&gt;📸 PNG&lt;/button&gt;
+    &lt;button class="os-export-btn btn-excel"&gt;📊 Excel&lt;/button&gt;
+    &lt;button class="os-export-btn btn-pdf"&gt;📄 PDF&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+
+        <!-- Automatska mehanika ugrađenih stilova -->
+        <h6 class="fw-bold text-danger mb-2">Automatska CSS mehanika ugrađenih stilova</h6>
+        <p class="text-muted small">Zahvaljujući ugrađenoj metodi unutar <code>openshop-charts-v1.4.2.js</code>, čim se grafikon iscrta, plugin u wrapper ubacuje apsolutno pozicionirane tooltipove (<code>.os-chart-tooltip</code>) i aktivira 3D hover efekte pomeranja slojeva po Y osi (<code>translateY(-4px)</code>) prilikom prelaska miša preko isečaka.</p>
+        <div class="card-body">
+      <div id="statistika-prodaje" style="width: 100%; max-width: 600px;"></div>
+        </div>
+    </div>
+</div>
+
 
 </div>
-            <!-- DESNA KOLONA: Kontrolna Tabla za Obaveštenja -->
-            <div class="col-lg-4">
-              <div class="card bg-dark text-white">
-                  <div class="card-header bg-transparent text-white border-secondary">
-                      <i class="fa-solid fa-bolt me-2 text-warning"></i> Notify Engine API
-                  </div>
-                  <div class="card-body">
-                      <p class="small text-secondary mb-4">Ovaj modul upravlja svim sistemskim porukama bez pisanja dodatnog HTML-a.</p>
 
-                      <div class="d-grid gap-2 mb-4">
-                          <button class="btn btn-sm btn-outline-success" onclick="OS.notify.success('Podaci su uspešno sinhronizovani!')">Success Toast</button>
-                          <button class="btn btn-sm btn-outline-danger" onclick="OS.notify.error('Došlo je do prekida veze sa bazom!')">Error Toast</button>
-                          <button class="btn btn-sm btn-outline-info" onclick="OS.notify.loading('Slanje fajlova u toku...')">Loading Toast</button>
-                      </div>
-
-                      <h6 class="fw-bold small text-uppercase mb-3">Modali (Sistemski Dijalozi)</h6>
-                      <div class="d-grid gap-2">
-                          <button class="btn btn-warning text-dark fw-bold" onclick="OS.notify.alert('Vaša sesija ističe za 60 sekundi!', 'Sigurnosno upozorenje')">Otvori Alert Modal</button>
-                          <button class="btn btn-outline-light" onclick="OS.notify.confirm('Da li želite da trajno obrišete ovaj proizvod?', () => OS.notify.error('Proizvod obrisan!'), 'Potvrda brisanja')">Otvori Confirm Modal 1</button>
-  <button class="btn btn-outline-light" onclick="OS.notify.confirm2('Da li želite da trajno obrišete ovaj proizvod?', () => OS.notify.error('Proizvod obrisan!'), 'Potvrda brisanja')">Otvori Confirm Modal 2</button>
-                      </div>
-                  </div>
-              </div>
-            </div>
 
         </div>
     </div>
 
+    <!-- DESNA KOLONA: Kontrolna Tabla za Obaveštenja -->
+    <div class="col-lg-4">
+      <div class="card bg-dark text-white">
+          <div class="card-header bg-transparent text-white border-secondary">
+              <i class="fa-solid fa-bolt me-2 text-warning"></i> Notify Engine API
+          </div>
+          <div class="card-body">
+              <p class="small text-secondary mb-4">Ovaj modul upravlja svim sistemskim porukama bez pisanja dodatnog HTML-a.</p>
 
+              <div class="d-grid gap-2 mb-4">
+                  <button class="btn btn-sm btn-outline-success" onclick="OS.notify.success('Podaci su uspešno sinhronizovani!')">Success Toast</button>
+                  <button class="btn btn-sm btn-outline-danger" onclick="OS.notify.error('Došlo je do prekida veze sa bazom!')">Error Toast</button>
+                  <button class="btn btn-sm btn-outline-info" onclick="OS.notify.loading('Slanje fajlova u toku...')">Loading Toast</button>
+              </div>
+
+              <h6 class="fw-bold small text-uppercase mb-3">Modali (Sistemski Dijalozi)</h6>
+              <div class="d-grid gap-2">
+                  <button class="btn btn-warning text-dark fw-bold" onclick="OS.notify.alert('Vaša sesija ističe za 60 sekundi!', 'Sigurnosno upozorenje')">Otvori Alert Modal</button>
+                  <button class="btn btn-outline-light" onclick="OS.notify.confirm('Da li želite da trajno obrišete ovaj proizvod?', () => OS.notify.error('Proizvod obrisan!'), 'Potvrda brisanja')">Otvori Confirm Modal 1</button>
+<button class="btn btn-outline-light" onclick="OS.notify.confirm2('Da li želite da trajno obrišete ovaj proizvod?', () => OS.notify.error('Proizvod obrisan!'), 'Potvrda brisanja')">Otvori Confirm Modal 2</button>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  </div>
 
     <!-- 2. Tvoj osnovni framework (Zamena za jQuery) -->
     <script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -1822,6 +1905,7 @@ $proizvodi = $db-&gt;execute($query, $params);
           <script src="assets/js/openshop-sortable.js?1vae5rtr"></script>
   <script src="assets/js/openshop-galery.js?15a5"></script>
     <script src="assets/js/os-product-swiper.js?15a5"></script>
+      <script src="assets/js/os-charts.js?17dfd"></script>
   <style type="text/css">
 
   </style>
@@ -1838,6 +1922,57 @@ window.VERSION = '4.0';
       return prevodi[key] || key;
   };
   OS(function() {
+    /*
+    OS('#statistika-prodaje').Chart({
+        type: 'donut',
+        height: 180,
+        labels: ['Telefoni', 'Laptopovi', 'Oprema', 'Satovi'],
+        data: [45, 25, 80, 15] // Ukupno 165 artikala, sistem sam računa uglove
+    });
+    OS('#statistika-prodaje').Chart({
+             type: 'bar',
+             height: 220,
+             labels:  ['Jan', 'Feb'],
+             datasets: [
+                 {
+                     label: 'Prodaja',
+                     data:  [150000, 230000],
+                     color: '#10b981'
+                 }
+             ]
+         });
+         OS('#statistika-prodaje').Chart({
+         type: 'line',
+         height: 200,
+         labels: ['Pon', 'Uto', 'Sre', 'Čet'],
+         datasets: [
+             {
+                 label: 'Broj porudžbina',
+                 data: [45, 25, 80, 15] ,
+                 color: '#8b5cf6' // Ljubičasta
+             }
+         ]
+     });
+*/
+OS('#statistika-prodaje').Chart({
+    type: 'pie',              // Tip grafikona: 'pie' (pita), 'donut' (krofna), 'bar' (stubovi), 'line' (linije)
+    height: 300,              // Visina prostora za renderovanje u pikselima
+    labels: ['Jan', 'Feb', 'Mar'], // Nazivi sekcija prikazani u legendi i tooltipu
+    datasets: [
+        {
+            label: 'Broj porudžbina', // Naziv cele serije podataka
+            data:[45, 25, 80] ,      // Sirov brojčani unos (Engine sam preračunava procente)
+            color: '#8b5cf6'         // Primarna tema (Engine automatski dodeljuje paletu za pitu)
+        }
+    ],
+    options: {
+        animated: true,       // Aktivira glatke uvodne CSS animacije
+        tooltips: true,       // Aktivira pametni tamni prozorčić pri prelasku miša
+        legend: true,         // Prikazuje paletu i nazive meseci iznad grafikona
+        is3D: true,           // KLJUČNO: Aktivira isometrijski 3D nagib i elipsu umesto ravnog kruga
+        depth: 15             // Visina (debljina) 3D prstena izražena u pikselima
+    }
+});
 
 
  OS('[data-3d-smart="1"]').Init360InfinityViewer({
